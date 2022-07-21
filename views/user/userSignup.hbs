@@ -1,0 +1,63 @@
+<section id="signup">
+    <div class="row ">
+        <div class="col-md-6 border rounded shadow p-2 mb-4 bg-body rounded pt-3" id="signPage">
+            <div class="container ps-5">
+                <h2 class="text-center">Create new account</h2>
+                <div class="col-md-12 m-1 google-btn w-100">
+                    <div class="google-icon-wrapper">
+                        <img class="google-icon"
+                            src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" />
+                    </div>
+                    <p class="btn-text text-center pt-2"><b class="text-light pt-4">Sign in with google</b></p>
+                </div>
+                <h4 class="text-center">or</h4>
+                <form action="/userSignup" method="post">
+                    <div class="col-md-12 form-group m-1">
+                        <label for="">Name</label>
+                        <input type="text" name="Name" class="form-control w-100" placeholder="Enter Name">
+                    </div>
+                    <div class="col-md-12 form-group m-1">
+                        <label for="">Email address</label>
+                        <input type="email" name="Email" class="form-control w-100" placeholder="Enter email">
+                    </div>
+                    <div class="col-md-12 form-group m-1 w-100">
+                        <label for="">Phone</label>
+                        <input type="number" class="form-control" id="phone" name="phone" value="" placeholder="Phone">
+                    </div>
+                    <div class="col-md-12 form-group m-1  w-100">
+                        <label for="">Password</label>
+                        <input type="password" name="Password" class="form-control" placeholder="Password">
+                    </div>
+                    {{!-- <div class="col-md-12 form-group m-1  w-100">
+                        <label for=""> Password</label>
+                        <input type="password" name="Password" class="form-control" placeholder="Password">
+                    </div> --}}
+                    <div class="float-end col-md-12 m-2">
+                        <button type="submit" class="btn btn-primary float-end w-100">Signup</button>
+                    </div>
+                    <a href="/userLogin" class="m-1">Already have account</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    html,
+    body {
+        height: 100%;
+    }
+
+    #signPage {
+        margin: auto;
+        margin-top: 75px;
+
+    }
+
+    #signup {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        background: rgb(212, 212, 228);
+    }
+</style>
