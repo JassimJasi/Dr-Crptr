@@ -5,8 +5,10 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const hbs = require('express-handlebars');
 var session=require('express-session')
+const fileUpload = require('express-fileupload')
 
 const db = require('./config/connection');
+const passport = require('passport')
 
 var userRouter = require('./routes/user');
 var adminRouter = require('./routes/admin');
@@ -23,7 +25,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+//app.use('/public', express.static(path.resolve('./public')));
+app.use(fileUpload())
 app.use(session({secret:"key", resave: true, saveUninitialized: true, cookie:{maxAge:600000}}))
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 db.connect((err) => {

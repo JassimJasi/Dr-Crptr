@@ -16,15 +16,15 @@
 <link href="https://fonts.googleapis.com/css?family=Roboto:400,500i,700" rel="stylesheet"> 
 
   
-<link rel="stylesheet" href="stylesheets/css/bootstrap.min.css">
-<link rel="stylesheet" href="stylesheets/css/animate.css">
-<link rel="stylesheet" href="stylesheets/css/owl.carousel.min.css">
-<link rel="stylesheet" href="stylesheets/css/all.css">
-<link rel="stylesheet" href="stylesheets/css/flaticon.css">
-<link rel="stylesheet" href="stylesheets/css/themify-icons.css">
-<link rel="stylesheet" href="stylesheets/css/magnific-popup.css">
-<link rel="stylesheet" href="stylesheets/css/slick.css">
-<link rel="stylesheet" href="stylesheets/css/style.css">
+<link rel="stylesheet" href="/stylesheets/css/bootstrap.min.css">
+<link rel="stylesheet" href="/stylesheets/css/animate.css">
+<link rel="stylesheet" href="/stylesheets/css/owl.carousel.min.css">
+<link rel="stylesheet" href="/stylesheets/css/all.css">
+<link rel="stylesheet" href="/stylesheets/css/flaticon.css">
+<link rel="stylesheet" href="/stylesheets/css/themify-icons.css">
+<link rel="stylesheet" href="/stylesheets/css/magnific-popup.css">
+<link rel="stylesheet" href="/stylesheets/css/slick.css">
+<link rel="stylesheet" href="/stylesheets/css/style.css">
 
 
   </head>
@@ -35,7 +35,11 @@
     {{>userHeader}}
     {{/if}}
     {{{body}}}
+    {{#if admin}}
+    {{>adminFooter}}
+    {{else}}
     {{>footer}}
+    {{/if}}
 
 
     <!-- jquery plugins here-->

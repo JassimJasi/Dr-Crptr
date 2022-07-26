@@ -1,51 +1,122 @@
-<section id="signup">
+<section id="signup" class="userSignup ">
     <div class="row ">
         <div class="col-md-6 border rounded shadow p-2 mb-4 bg-body rounded pt-3" id="signPage">
             <div class="container ps-5">
                 <h2 class="text-center">Create new account</h2>
-                <div class="col-md-12 m-1 google-btn w-100">
-                    <div class="google-icon-wrapper">
-                        <img class="google-icon"
-                            src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" />
+
+                <form action="/userSignup" method="post" id="userSignup">
+                    {{!-- <div class="text-center">
+                        <p class="lead fw-normal mb-0 me-3">Sign in with</p>
+                        <button type="button" class="btn btn-primary btn-floating mx-1">
+                            <i class="fab fa-whatsapp"></i>
+                        </button>
+
+                        <button type="button" class="btn btn-primary btn-floating mx-1">
+                            <i class="fab fa-google"></i>
+                        </button>
+
+
                     </div>
-                    <p class="btn-text text-center pt-2"><b class="text-light pt-4">Sign in with google</b></p>
-                </div>
-                <h4 class="text-center">or</h4>
-                <form action="/userSignup" method="post">
-                    <div class="col-md-12 form-group m-1">
+
+
+                    <div class=" my-4">
+                        <p class="text-center fw-bold mx-3 mb-0">Or</p>
+                    </div> --}}
+
+                    <div class="col-md-12 form-group m-3">
                         <label for="">Name</label>
-                        <input type="text" name="Name" class="form-control w-100" placeholder="Enter Name">
+                        <input type="text" name="displayName" class="form-control w-100" placeholder="Enter Name">
                     </div>
-                    <div class="col-md-12 form-group m-1">
+                    <div class="col-md-12 form-group m-3">
                         <label for="">Email address</label>
                         <input type="email" name="Email" class="form-control w-100" placeholder="Enter email">
                     </div>
-                    <div class="col-md-12 form-group m-1 w-100">
+                    <div class="col-md-12 form-group m-3 w-100">
                         <label for="">Phone</label>
-                        <input type="number" class="form-control" id="phone" name="phone" value="" placeholder="Phone">
+                        <input type="number" name="Phone" class="form-control" placeholder="Phone">
                     </div>
-                    <div class="col-md-12 form-group m-1  w-100">
+                    <div class="col-md-12 form-group m-3  w-100">
                         <label for="">Password</label>
                         <input type="password" name="Password" class="form-control" placeholder="Password">
                     </div>
-                    {{!-- <div class="col-md-12 form-group m-1  w-100">
-                        <label for=""> Password</label>
-                        <input type="password" name="Password" class="form-control" placeholder="Password">
-                    </div> --}}
-                    <div class="float-end col-md-12 m-2">
+                    <div class="col-md-12 form-group m-3  w-100">
+                        <label for="">Confirm Password</label>
+                        <input type="password" name="ConfirmPassword" class="form-control" id="Password"
+                            placeholder="Confirm Password">
+                    </div>
+                    <div class="float-end col-md-12 m-3">
                         <button type="submit" class="btn btn-primary float-end w-100">Signup</button>
                     </div>
-                    <a href="/userLogin" class="m-1">Already have account</a>
+                    <a href="/userLogin" class="m-3">Already have account</a>
                 </form>
             </div>
         </div>
     </div>
 </section>
+{{!-- validation --}}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script>
+<style>
+    .error {
+  color: red;
+  border: 1px solid  red;
+}
+</style>
+
+<script>
+    $("#userSignup").validate({
+        rules: {
+            displayName: {
+                required: true,
+                minlength: 5
+            },
+
+            Email: {
+                required: true,
+                Email: true
+            },
+
+            Phone: {
+                required: true,
+                minlength: 10
+            },
+
+            Password: {
+                required: true,
+                minlength: 5,
+                maxlength: 15
+
+            },
+
+            ConfirmPassword: {
+                required: true,
+                equalTo: '#Password',
+                minlength: 5,
+                maxlength: 15
+            }
+
+
+        },
+        messages: {
+            Password: {
+                required: "the password is required"
+
+            },
+            ConfirmPassword: {
+                equalTo: "enter the same password"
+
+            },
+        }
+    })
+</script>
 
 <style>
     html,
     body {
         height: 100%;
+        scroll-behavior: smooth;
+         overflow-x: hidden;
     }
 
     #signPage {
@@ -58,6 +129,6 @@
         width: 100%;
         height: 100%;
         margin: 0;
-        background: rgb(212, 212, 228);
+        {{!-- background: rgb(212, 212, 228); --}}
     }
 </style>
