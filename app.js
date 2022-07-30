@@ -26,7 +26,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 //app.use('/public', express.static(path.resolve('./public')));
-app.use(fileUpload())
+//app.use(fileUpload())
 app.use(session({secret:"key", resave: true, saveUninitialized: true, cookie:{maxAge:600000}}))
 
 app.use(passport.initialize());

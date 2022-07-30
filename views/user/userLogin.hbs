@@ -37,7 +37,7 @@
                             novalidate="novalidate">
 
                             <div class="col-md-12 form-group p_star">
-                                <input type="text" class="form-control" id="name" name="name" value=""
+                                <input type="text" class="form-control" id="name" name="displayName" value=""
                                     placeholder="Username">
                             </div>
                             {{!-- <div class="col-md-12 form-group p_star">
@@ -84,7 +84,7 @@
 <script>
     $("#userLogin").validate({
         rules: {
-            name: {
+            displayName: {
                 required: true,
                 minlength: 5
             },

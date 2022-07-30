@@ -40,5 +40,11 @@ module.exports = {
         resolve({status:false})
     }
         })
+    },
+    viewUser: () => {
+        return new Promise (async(resolve, reject) => {
+           let userData = await db.get().collection(collection.USER_COLLECTION).find().toArray();
+            resolve(userData);
+        })
     }
 }

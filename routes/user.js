@@ -3,16 +3,23 @@ var express = require('express');
 var router = express.Router();
 
 const userHelper = require('../helpers/userHelpers');
-const verify = require('../helpers/verify')
-const passport = require('passport')
-require ('../helpers/googleAuth')(passport);
+const verify = require('../helpers/verify');
+const passport = require('passport');
+require('../helpers/googleAuth')(passport);
+const productHelpers = require('../helpers/productHelpers');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
   let user = req.session.user;
-  console.log("final",user);
+  console.log("final", user);
   res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-  res.render('user/userHome', { admin: false, user });
+
+  //get product
+  productHelpers.viewProducts().then((products) => {
+    console.log("prod",products);
+    res.render('user/userHome', { admin: false, user, products });
+  })
+
 });
 
 //userSignup page
@@ -21,7 +28,7 @@ router.get('/userSignup', (req, res, next) => {
   if (req.session.loggedIn) {
     res.redirect('/')
   } else {
-    res.render('user/userSignup', {layout:'loginLayout'})
+    res.render('user/userSignup', { layout: 'loginLayout' })
   }
 });
 router.post('/userSignup', (req, res) => {
@@ -32,7 +39,7 @@ router.post('/userSignup', (req, res) => {
 });
 router.get('/otp', (req, res) => {
   res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-  res.render('user/userSignupotp', { "verifyErr": req.session.verifyErr, layout:'loginLayout' })
+  res.render('user/userSignupotp', { "verifyErr": req.session.verifyErr, layout: 'loginLayout' })
   req.session.verifyErr = false;
 
 });
@@ -68,7 +75,7 @@ router.post('/otp', (req, res) => {
 })
 router.get('/loginOTP', (req, res) => {
   res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-  res.render('user/userOtpLogin',{layout:'loginLayout'})
+  res.render('user/userOtpLogin', { layout: 'loginLayout' })
 });
 router.post('/userOtpLogin', (req, res) => {
   req.session.userBody = req.body;
@@ -84,11 +91,12 @@ router.get('/userLogin', (req, res) => {
   if (req.session.loggedIn) {
     res.redirect('/')
   } else {
-    res.render('user/userLogin', { 'loginErr': req.session.loginErr , layout:'loginLayout'});
+    res.render('user/userLogin', { 'loginErr': req.session.loginErr, layout: 'loginLayout' });
     req.session.loginErr = false
   }
 });
 router.post('/userLogin', (req, res) => {
+  console.log("userLog", req.body);
   userHelper.doLogin(req.body).then((response) => {
     if (response.status) {
       console.log("loging done", response.user);
@@ -103,17 +111,20 @@ router.post('/userLogin', (req, res) => {
   });
 });
 //google
-router.get('/google',passport.authenticate('google',{scope :['profile', 'email', ]}))
-router.get('/google/callback',passport.authenticate('google',{failureRedirect: '/login'}), (req, res) => {
- // console.log("logged",req.user);
-  req.session.user = req.user
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email',] }))
+router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
+  console.log("logged", req.user.user);
+  req.session.user = req.user.user
   req.session.loggedIn = true
   res.redirect('/')
 });
 
 
+
+
 router.get('/userLogout', (req, res) => {
-  req.session.destroy()
+  req.session.loggedIn = false
+  req.session.user = null;
   res.redirect('/')
 })
 

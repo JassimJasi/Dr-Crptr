@@ -2642,6 +2642,7 @@ ul {
 .feature_part .single_feature_post_text {
   padding: 50px;
   background-color: #f8fbff;
+  /* background-color: white; */
   margin-bottom: 30px;
   position: relative;
   height: 400px;
@@ -2717,7 +2718,7 @@ ul {
 /* line 68, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_feature_part.scss */
 .feature_part .single_feature_post_text img {
   position: absolute;
-  bottom: 0;
+  
   right: 15px;
 }
 

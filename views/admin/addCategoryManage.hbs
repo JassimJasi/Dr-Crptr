@@ -1,0 +1,81 @@
+
+{{!-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script> --}}
+{{!--
+<!------ Include the above in your HEAD tag ----------> --}}
+<section class="pe-5 ps-5 text-center container-xxl position-relative bg-white d-flex p-0">
+    <div class="content p-2 d-flex justify-content-center mt-5" >
+    <form class="form-horizontal " action="/admin/addCategory" method="post" id="addCategory" >
+
+
+        <!-- Form Name -->
+        <legend>Add Category Management</legend>
+
+
+        <!-- Text input-->
+        <div class="form-group text-center">
+            <label class=" control-label" for="product_name">Category Name</label>
+            <div class="addInput">
+                <input id="product_name" name="categoryName" placeholder="Category Name" class="form-control input-md mt-2"
+                    required="" type="text">
+
+            </div>
+        </div>      
+        {{#if errMes}}
+        <p class="text-danger">{{errMes}}</p>
+        {{/if}}
+                <!-- Button -->
+                <div class="form-group mt-3">
+                    
+                    <div class="addInput">
+                        <button id="singlebutton"  onclick="alert('Are you sure you want to add this Category')" type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+
+
+    </form>
+</div>
+</section>
+
+<style>
+    @media (min-width: 989px) {
+    
+    .addInput{
+        width: 500px;
+    }
+}
+
+@media (max-width: 988.98px) {
+  .addInput{
+        width: 100%;
+    }
+}
+</style>
+{{!-- validation --}}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script>
+
+<style>
+    .error {
+  color: red;
+ 
+}
+</style>
+<script>
+    $("#addCategory").validate({
+        rules: {
+            categoryName: {
+                required: true,
+                minlength: 3
+            }
+        },
+        messages: {
+            categoryName: {
+                required: "Please Fill"
+
+            }
+        }
+    })
+</script>

@@ -1,0 +1,55 @@
+
+    
+
+<div class="container-xxl position-relative bg-white d-flex p-0 products" ng-app="app" ng-controller="AppCtrl">
+
+    <div class="content p-4">
+<a type="button" class="btn btn-success" href="/admin/addCategory"><i class="fas fa-plus"></i>  Add Category</a>
+        <div class="actionpane  text-center">
+            <button class="btn btn-default">Category Management</button>
+        </div>
+
+        <div class="tables">
+            <table class="table  table-striped table-bordered table-hover table-checkable order-column dataTable p-5">
+                <thead>
+                    <tr>
+                        
+                        <th>Category Name</th>
+                       
+                        {{!-- <th>Status</th> --}}
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    {{#each category}}
+                    <tr>
+                        <td>{{this.categoryName}}</td>
+
+                        {{!-- <td><span class="name">{{this.displayName}}</span>
+                        </td> --}}
+                        <td class="text-center "><a href="/admin/categoryDel/{{this._id}}" type="button"
+                        onclick="alert("Are you sure you want to delete")" class="viewCateg text-danger"><i class="fas fa-trash-alt"></i></a></td>
+                        <td  class="text-center"><a href="" type="button" class="viewCateg text-success"><i class="fas fa-edit"></i></a></td> 
+                        {{!-- <td>{{status}}</td> --}}
+                        {{!-- <td><span class="label label-success"> Available </span></td> --}}
+                        {{!-- <td>{{this.date}}</td> --}}
+                    </tr>
+                    {{/each}}
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .products {
+        .name {
+            border-bottom: 1px dotted #ccc;
+            cursor: pointer;
+        }
+    }
+    .viewCateg{
+        text-decoration: none;
+    }
+</style>

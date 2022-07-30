@@ -11,17 +11,25 @@ module.exports = function(passport) {
         callbackURL: "http://localhost:3000/google/callback"
     },
     (AccessToken,refreshToken,profile,done) => {
-        console.log(profile);
+       // console.log(profile);
 
+        let userData = {
+                        
+                id: profile.id,
+                displayName : profile.displayName,
+                Email: profile._json.email,
+                Phone: "",
+                
+            } 
         //find if a user exisst with this email or not
-        userHelper.googleAccount(profile).then((data) => {
+        userHelper.googleAccount(userData).then((data) => {
             console.log("googleAc",data);
             return done(null, data)
         })
     }
     )),
     passport.serializeUser(function(user, done) {
-        console.log("seri",user);
+        //console.log("seri",user);
         done(null, user);
       });
       
