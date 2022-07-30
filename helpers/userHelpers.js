@@ -65,27 +65,19 @@ module.exports = {
             if (user) {
                 response.user = user;
                 response.status = true;
+                console.log("g-login",response);
                 resolve(response);
             } else {
-                return new Promise(async (resolve, reject) => {
-                    //userdata.Password = await bcrypt.hash(userdata.Password, 10);
-                    // let userData = {
-
-                    //     id: data.id,
-                    //     displayName : data.displayName,
-                    //     Email: data._json.email,
-                    //     Phone: "",
-
-                    // } 
-                    // console.log("googAccCreat",userData);
-                   await db.get().collection(collection.USER_COLLECTION).insertOne(data).then((data) => {
-                        data._id = data.insertedId
-                        console.log("g-acc crear",data);
+                
+                  
+                   await db.get().collection(collection.USER_COLLECTION).insertOne(data).then((data1) => {
+                        data._id = data1.insertedId
                         response.user = data;
                         response.status = true;
+                        console.log("g-acc crear",response);
                         resolve(response)
                     });
-                });
+               
             }
         });
     },

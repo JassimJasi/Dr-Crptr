@@ -34,7 +34,7 @@ module.exports = function(passport) {
       });
       
       passport.deserializeUser(function(user, done) {
-        userHelper.googleUserId(user._id).then((user) => {
+        userHelper.googleUserId(user._id).then((user1) => {
             done(null,user);
         })
       });
