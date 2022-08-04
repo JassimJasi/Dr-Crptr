@@ -5,6 +5,7 @@ const adminHelper = require('../helpers/adminHelper');
 const verify = require('../helpers/verify');
 const productHelpers = require('../helpers/productHelpers');
 const upload = require('../middleware/multer');
+const userHelpers = require('../helpers/userHelpers');
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {
@@ -93,10 +94,24 @@ router.get('/view-user', (req, res) => {
 })
 
 //delete user 
-router.get('/userDel/:id', (req,res) => {
+router.get('/userDel/:id', (req, res) => {
   let userId = req.params.id
-  productHelpers.delUser(userId).then(() => {
+  adminHelper.delUser(userId).then(() => {
     res.redirect('/admin/view-user')
+  })
+})
+
+//user Edit
+router.get('/userEdit/:id', async (req, res) => {
+  let admin = req.session.admin;
+  let userId = req.params.id
+  let user = await adminHelper.getUserById(userId)
+  res.render('admin/editUser', { admin, layout: "adminLayout", user })
+
+})
+router.post('/edit-user/:id', (req, res) => {
+  adminHelper.editUser(req.params.id, req.body).then(() => {
+    res.redirect('back')
   })
 })
 
@@ -109,8 +124,8 @@ router.get('/add-product', (req, res) => {
   if (req.session.admin) {
     let admin = req.session.admin;
     productHelpers.viewCategory().then((category) => {
-      console.log("addPro Cate",category);
-    res.render('admin/addProduct', { admin,category, layout: "adminLayout" })
+      console.log("addPro Cate", category);
+      res.render('admin/addProduct', { admin, category, layout: "adminLayout" })
     })
   } else {
     res.redirect('/admin')
@@ -142,7 +157,7 @@ router.get('/view-product', (req, res) => {
   if (req.session.admin) {
     let admin = req.session.admin;
     productHelpers.viewProducts().then((products) => {
-      
+
       res.render('admin/adminViewProduct', { admin, layout: "adminLayout", products });
     })
   } else {
@@ -150,18 +165,43 @@ router.get('/view-product', (req, res) => {
   }
 })
 //delete Product
-router.get('/productDel/:id', (req,res) => {
+router.get('/productDel/:id', (req, res) => {
   let prodId = req.params.id
   productHelpers.delProduct(prodId).then(() => {
     res.redirect('/admin/view-product')
   })
 })
-// router.get('/userDel/:id', (req,res) => {
-//   let userId = req.params.id
-//   productHelpers.delUser(userId).then(() => {
-//     res.redirect('/admin/view-user')
-//   })
-// })
+
+//edit Product
+router.get('/productEdit/:id', async (req, res) => {
+
+  let prodId = req.params.id
+  let products = await productHelpers.getProdById(prodId)
+  let category = productHelpers.viewCategory().then((category) => {
+    let proErr = req.session.editProductErr
+    let proSucc = req.session.successMess
+    res.render('admin/editProduct', { category,proSucc, layout: "adminLayout", products, proErr })
+    req.session.editProductErr = false
+    req.session.successMess = false
+  })
+})
+
+router.post('/productEdit/:id', upload.array('image', 4), (req, res) => {
+  let image = [];
+  let files = req.files;
+
+  image = files.map((value) => {
+    return value.filename;
+  })
+  console.log(req.params.id);
+  productHelpers.editProduct(req.params.id, req.body, image).then((success) => {
+    req.session.successMess = success
+    res.redirect('back')
+  }).catch((error) => {
+    req.session.editProductErr = error;
+    res.redirect('back')
+  })
+})
 
 //CategoryManagement
 
@@ -182,10 +222,10 @@ router.get('/addCategory', (req, res) => {
   if (req.session.admin) {
     let admin = req.session.admin;
     let errMes = req.session.addCategoryErr
-     
+
     res.render('admin/addCategoryManage', { admin, errMes, layout: "adminLayout" })
     req.session.addCategoryErr = false
-      
+
   } else {
     res.redirect('viewCategory')
   }
@@ -194,7 +234,7 @@ router.post('/addCategory', (req, res) => {
   //console.log("Category", req.body);
   productHelpers.addCategory(req.body).then((response) => {
     //console.log(response);
-   
+
     res.redirect('viewCategory');
   }).catch((err) => {
     req.session.addCategoryErr = err;
@@ -212,12 +252,42 @@ router.get('/categoryDel/:id', (req, res) => {
   })
 })
 
+//edit Category
+
+
+
+
+
+
+router.get('/categoryEdit/:id', async (req, res) => {
+  let err = req.session.editCateErr
+  let cateId = req.params.id
+  let admin = req.session.admin;
+   productHelpers.getCateById(cateId).then((category) => {
+    console.log(category);
+    res.render('admin/editCategory', { admin, err, layout: "adminLayout", category })
+  }).catch((errmass) => {
+    res.status(404).send(errmass);
+  })
+})
+router.post('/editCategory/:id', (req, res) => {
+  productHelpers.editCategory(req.params.id, req.body).then(() => {
+    //req.session.editCateErr = errResp
+    res.redirect('back')
+  }).catch((err) => {
+    req.session.editCateErr = err
+    res.redirect('back')
+  })
+})
+
 //adminLogout
 router.get('/adminLogout', (req, res) => {
   req.session.adminLoggedIn = false
   req.session.admin = null;
   res.redirect('/admin')
 })
+
+
 
 
 module.exports = router;

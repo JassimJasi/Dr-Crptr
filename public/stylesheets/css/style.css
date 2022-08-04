@@ -7413,10 +7413,11 @@ h6 {
 
 /* line 1, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_breadcrumb.scss */
 .breadcrumb_bg {
-  background-image: url("../img/breadcrumb.png");
-  background-position: center;
+  padding-top: 125px;
+  
+  background-position: right bottom;
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: auto 80vh;
 }
 
 /* line 5, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_breadcrumb.scss */

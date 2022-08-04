@@ -29,6 +29,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 //app.use(fileUpload())
 app.use(session({secret:"key", resave: true, saveUninitialized: true, cookie:{maxAge:600000}}))
 
+
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -51,10 +52,13 @@ app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-
+  
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  console.log("error ",err.status);
+  res.locals.errPage = err.status;
+  //res.render('error');
+  res.render('add404ERR',{layout:"loginLayout"});
 });
 
 module.exports = app;

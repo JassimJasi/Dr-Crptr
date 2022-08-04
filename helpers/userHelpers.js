@@ -2,6 +2,7 @@ const db = require('../config/connection');
 const collection = require('../config/collections');
 const bcrypt = require('bcrypt');
 const { response } = require('express');
+var objectId = require('mongodb').ObjectId;
 
 module.exports = {
     doSignup: (userdata) => {
@@ -67,9 +68,7 @@ module.exports = {
                 response.status = true;
                 console.log("g-login",response);
                 resolve(response);
-            } else {
-                
-                  
+            } else {                  
                    await db.get().collection(collection.USER_COLLECTION).insertOne(data).then((data1) => {
                         data._id = data1.insertedId
                         response.user = data;
@@ -94,5 +93,22 @@ module.exports = {
                 resolve({ status: false })
             }
         });
+    },
+    addToCart : (prodId,userId) => {
+        return new Promise(async( resolve, reject) => {
+            let userCart = await db.get().collection(collection.CART_COLLECTION).findOne({_id:objectId(userId)})
+            if(userCart) {
+
+            }else {
+                let cartObj = {
+                    user:objectId(userId),
+                    products:[objectId(prodId)]
+                }
+                db.get().collection(collection.CART_COLLECTION).insertOne(cartObj).then((response) => {
+                    resolve(response)
+                })
+            }
+        })
     }
+    
 }

@@ -8,6 +8,15 @@ const passport = require('passport');
 require('../helpers/googleAuth')(passport);
 const productHelpers = require('../helpers/productHelpers');
 
+// Not login
+const verifyLogin = ( req,res,next) => {
+  if(req.session.loggedIn){
+    next()
+  }else {
+    res.redirect('/userLogin')
+  }
+}
+
 /* GET home page. */
 router.get('/', function (req, res, next) {
   let user = req.session.user;
@@ -16,7 +25,7 @@ router.get('/', function (req, res, next) {
 
   //get product
   productHelpers.viewProducts().then((products) => {
-    console.log("prod",products);
+    console.log("prod", products);
     res.render('user/userHome', { admin: false, user, products });
   })
 
@@ -119,7 +128,43 @@ router.get('/google/callback', passport.authenticate('google', { failureRedirect
   res.redirect('/')
 });
 
+//product
+router.get('/userProduct', (req, res) => {
+  let user = req.session.user;
+  res.render('user/userProduct', { user })
+})
 
+
+//product Details
+router.get('/prodDetails/:id', (req, res,next) => {
+  let user = req.session.user;
+
+  productHelpers.productDetails(req.params.id).then((productDetails) => {
+    console.log("user 1 pro", productDetails);
+    let category = productDetails.product.product_categorie
+    productHelpers.cateProducts(category).then((products) => {
+      console.log("cate prod" , products )
+      res.render('user/productDetails', { user, productDetails, products })
+    })
+  }).catch((errMes) => {
+    next(errMes)
+  })
+})
+
+//cart
+router.get('/cart',(req,res) => {
+  res.render('user/cart')
+})
+
+//add to cart
+router.get('/add-To-Cart/:id',verifyLogin,(req,res) => {
+  req.session.cartPage = true
+  console.log("cart", req.params.id);
+  console.log("cart", req.session.user._id);
+   userHelper.addToCart(req.params.id,req.session.user._id).then(() => {
+     res.redirect('/')
+   })
+})
 
 
 router.get('/userLogout', (req, res) => {

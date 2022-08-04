@@ -15,9 +15,7 @@
                             <i class="fab fa-google"></i>
                         </button>
 
-
                     </div>
-
 
                     <div class=" my-4">
                         <p class="text-center fw-bold mx-3 mb-0">Or</p>
@@ -25,24 +23,24 @@
 
                     <div class="col-md-12 form-group m-3">
                         <label for="">Name</label>
-                        <input type="text" name="displayName" class="form-control w-100" placeholder="Enter Name">
+                        <input type="text" name="displayName" class="form-control w-100" placeholder="Enter Name" id="displayName">
                     </div>
                     <div class="col-md-12 form-group m-3">
                         <label for="">Email address</label>
-                        <input type="email" name="Email" class="form-control w-100" placeholder="Enter email">
+                        <input type="email" name="Email" class="form-control w-100" placeholder="Enter email" id="Email">
                     </div>
                     <div class="col-md-12 form-group m-3 w-100">
                         <label for="">Phone</label>
-                        <input type="number" name="Phone" class="form-control" placeholder="Phone">
+                        <input type="number" name="Phone" class="form-control" placeholder="Phone" id="Phone">
                     </div>
                     <div class="col-md-12 form-group m-3  w-100">
                         <label for="">Password</label>
-                        <input type="password" name="Password" class="form-control" placeholder="Password">
+                        <input type="password" name="Password" class="form-control" placeholder="Password" required id="Password">
                     </div>
                     <div class="col-md-12 form-group m-3  w-100">
                         <label for="">Confirm Password</label>
-                        <input type="password" name="ConfirmPassword" class="form-control" id="Password"
-                            placeholder="Confirm Password">
+                        <input type="password" name="ConfirmPassword" class="form-control" 
+                            placeholder="Confirm Password" required id="ConfirmPassword">
                     </div>
                     <div class="float-end col-md-12 m-3">
                         <button type="submit" class="btn btn-primary float-end w-100">Signup</button>
@@ -67,21 +65,6 @@
 <script>
     $("#userSignup").validate({
         rules: {
-            displayName: {
-                required: true,
-                minlength: 5
-            },
-
-            Email: {
-                required: true,
-                Email: true
-            },
-
-            Phone: {
-                required: true,
-                minlength: 10
-            },
-
             Password: {
                 required: true,
                 minlength: 5,
@@ -94,11 +77,26 @@
                 equalTo: '#Password',
                 minlength: 5,
                 maxlength: 15
+            },
+            displayName: {
+                required: true,
+                minlength: 5
+            },
+
+            Email: {
+                required: true,
+                email: true
+            },
+
+            Phone: {
+                required: true,
+                minlength: 10
             }
 
 
+
         },
-        messages: {
+         messages: {
             Password: {
                 required: "the password is required"
 
@@ -107,7 +105,7 @@
                 equalTo: "enter the same password"
 
             },
-        }
+        } 
     })
 </script>
 

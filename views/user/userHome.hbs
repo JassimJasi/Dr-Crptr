@@ -96,8 +96,8 @@
                     <div class="single_feature_post_text">
                         <p>Premium Quality</p>
                         <h3>{{product.product_categorie}}</h3>
-                        <a href="#" class="feature_btn">EXPLORE NOW <i class="fas fa-play"></i></a>
-                        <img src="/product-images/{{image.[0]}}" width="auto" height="75%" alt="">
+                        <a href="/prodDetails/{{this._id}}" class="feature_btn">EXPLORE NOW <i class="fas fa-play"></i></a>
+                        <img src="/product-images/{{image.[0]}}" width="auto" height="70%" alt="">
                     </div>
                 </div>
                 {{/each}}
@@ -146,6 +146,7 @@
                         <div class="single_product_list_slider">
                             <div class="row align-items-center justify-content-between">
                                 {{#each products}}
+                                <a href="/prodDetails/{{this._id}}">
                                 <div class="col-lg-3 col-sm-6">
                                     <div class="single_product_item">
                                         <img src="/product-images/{{image.[0]}}" alt="">
@@ -156,6 +157,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                </a>
                                 {{/each}}
                                 {{!-- <div class="col-lg-3 col-sm-6">
                                     <div class="single_product_item">
