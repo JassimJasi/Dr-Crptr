@@ -18,6 +18,13 @@ module.exports = {
             resolve(products);
         })
     },
+    fourProduct: () => {
+        return new Promise(async (resolve, reject) => {
+            let fourProducts = await db.get().collection(collection.PRODUCT_COLLECTION).find().limit(4).toArray()
+           // console.log("four" ,fourProducts);
+            resolve(fourProducts);
+        })
+    },
     addCategory: (category) => {
         return new Promise(async (resolve, reject) => {
             //console.log(category);
