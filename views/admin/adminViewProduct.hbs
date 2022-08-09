@@ -32,10 +32,9 @@
 
                         <td>{{product.date}}</td>
                         <td class="text-center">
-                            <a href="/admin/productDel/{{this._id}}" type="button" onclick="alert(" Are you sure you
-                                want to delete")" class="viewCateg text-danger pe-2"><i
+                            <a href="/admin/productDel/{{this._id}}" type="button" onclick="delAlert() " class="viewCateg text-danger pe-2"><i
                                     class="fas fa-trash-alt"></i></a>
-                            <a href="/admin/productEdit/{{this._id}}" type="button" class="viewCateg text-success"><i
+                            <a href="/admin/productEdit/{{this._id}}"onclick="editAlert()" type="button" class="viewCateg text-success"><i
                                     class="fas fa-edit"></i></a>
                         </td>
                     </tr>
