@@ -7,6 +7,7 @@ const verify = require('../helpers/verify');
 const passport = require('passport');
 require('../helpers/googleAuth')(passport);
 const productHelpers = require('../helpers/productHelpers');
+const payHelper = require('../helpers/PayHelpers')
 
 // Not login
 const verifyLogin = (req, res, next) => {
@@ -28,10 +29,10 @@ router.get('/', async function (req, res, next) {
     //console.log(cartCount);
   }
   let fourProducts = await productHelpers.fourProduct()
-  console.log(fourProducts);
+  // console.log(fourProducts);
   productHelpers.viewProducts().then((products) => {
     //console.log("prod", products);
-    res.render('user/userHome', { admin: false, user, products, cartCount,fourProducts });
+    res.render('user/userHome', { admin: false, user, products, cartCount, fourProducts });
   })
 
 });
@@ -61,11 +62,11 @@ router.post('/otp', (req, res) => {
   let userData = req.session.userBody
   let number = userData.Phone
   verify.otpVerify(req.body, number).then((data) => {
-    console.log("otp post ", data);
+    // console.log("otp post ", data);
     if (data.status == 'approved') {
       if (req.session.userLoginBody) {
         userHelper.dootpLogin(req.session.userBody.Phone).then((response) => {
-          console.log('doOtpLogin', response);
+          //console.log('doOtpLogin', response);
           req.session.user = response.user;
           req.session.loggedIn = true
           req.session.userLoginBody = false;
@@ -73,7 +74,7 @@ router.post('/otp', (req, res) => {
         })
       } else {
         userHelper.doSignup(req.session.userBody).then((response) => {
-          console.log("post__", response);
+          //console.log("post__", response);
           req.session.user = response;
           req.session.loggedIn = true
           res.redirect('/')
@@ -110,10 +111,10 @@ router.get('/userLogin', (req, res) => {
   }
 });
 router.post('/userLogin', (req, res) => {
-  console.log("userLog", req.body);
+  // console.log("userLog", req.body);
   userHelper.doLogin(req.body).then((response) => {
     if (response.status) {
-      console.log("loging done", response.user);
+      //  console.log("loging done", response.user);
       req.session.loggedIn = true
       req.session.user = response.user
       if (req.session.cartPage) {
@@ -132,7 +133,7 @@ router.post('/userLogin', (req, res) => {
 //google
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email',] }))
 router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
-  console.log("logged", req.user.user);
+  //console.log("logged", req.user.user);
   req.session.user = req.user.user
   req.session.loggedIn = true
   res.redirect('/')
@@ -142,7 +143,7 @@ router.get('/google/callback', passport.authenticate('google', { failureRedirect
 router.get('/userProduct', async (req, res) => {
   let user = req.session.user;
   let category = await productHelpers.viewCategory()
-  
+
   //console.log("userCate",category);
   productHelpers.viewProducts().then((products) => {
 
@@ -156,10 +157,10 @@ router.get('/prodDetails/:id', (req, res, next) => {
   let user = req.session.user;
 
   productHelpers.productDetails(req.params.id).then((productDetails) => {
-    console.log("user 1 pro", productDetails);
+    // console.log("user 1 pro", productDetails);
     let category = productDetails.product.product_categorie
     productHelpers.cateProducts(category).then((products) => {
-      console.log("cate prod", products)
+      //console.log("cate prod", products)
       res.render('user/productDetails', { user, productDetails, products })
     })
   }).catch((errMes) => {
@@ -177,9 +178,9 @@ router.get('/cart', verifyLogin, async (req, res) => {
   if (products.length > 0) {
     totalValue = await userHelper.getTotalAmount(req.session.user._id)
     //console.log(products);
-    console.log("cart", products);
+    // console.log("cart", products);
     res.render('user/cart', { user, products, totalValue })
-   // res.session.cartEr = false;
+    // res.session.cartEr = false;
   } else {
     // res.session.cartErr = "Please login"
     res.redirect('/userLogin')
@@ -201,22 +202,53 @@ router.get('/add-To-Cart/:id', (req, res) => {
 })
 
 router.post('/change-product-quantity', (req, res, next) => {
-  console.log(req.body);
+  // console.log(req.body);
   userHelper.changeProductQuantity(req.body).then(async (response) => {
     response.total = await userHelper.getTotalAmount(req.body.user)
-    console.log("res", response);
+    //console.log("res", response);
     res.json(response)
   })
 })
 router.post('/remove-cart-product', (req, res, next) => {
-  console.log(req.body);
+  //console.log(req.body);
   userHelper.removeCartitem(req.body).then((response) => {
     res.json(response)
   })
 })
 //checkout
-router.get('/checkout' ,(req,res) => {
-  res.render("user/checkout")
+router.get('/checkout', verifyLogin, async (req, res) => {
+  let total = await userHelper.getTotalAmount(req.session.user._id)
+  res.render("user/checkout", { total, user: req.session.user })
+})
+//place order
+router.post('/place-order', async (req, res) => {
+  let products = await userHelper.getCartProductList(req.body.userId);
+  let totalPrice = await userHelper.getTotalAmount(req.body.userId)
+  userHelper.placeOrder(req.body, products, totalPrice).then((orderId) => {
+   // console.log("place req body",req.body['payment-method']);
+    if (req.body['payment-method'] ==='COD') {
+      
+      res.json({ codSuccess: true })
+    } else {
+     
+      payHelper.generateRazorpay(orderId, totalPrice).then((response) => {
+        res.json(response)
+      })
+    }
+  })
+
+})
+router.post('/verify-payment', (req, res) => {
+  console.log(req.body);
+  payHelper.verifyPayment(req.body).then(()=>{
+    payHelper.changePaymentStatus(req.body['order[receipt]']).then(()=>{
+      console.log('payment successfull');
+      res.json({status:true})
+    })
+  }).catch((err)=>{
+    console.log(err);
+    res.json({status:false,errMsg:''})
+  })
 })
 
 router.get('/userLogout', (req, res) => {

@@ -41,11 +41,12 @@
         src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.js"></script>
 
     {{!-- validation --}}
-    {{!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    {{!--
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script> --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script>
 
-
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -59,16 +60,16 @@
 
     {{>adminFooter}}
 
-<script>
+    <script>
 
-    function delAlert() {
-        alert("Are you sure you want to Delete");
-    }
-    function editAlert() {
-        alert("Are you sure you want to Edit");
-    }
+        function delAlert() {
+            alert("Are you sure you want to Delete");
+        }
+        function editAlert() {
+            alert("Are you sure you want to Edit");
+        }
 
-</script>
+    </script>
 
 
     <!-- JavaScript Libraries -->

@@ -95,9 +95,9 @@ module.exports = {
         });
     },
     addToCart: (prodId, userId) => {
-        let proObj =  {
-            item:objectId(prodId),
-            quantity:1
+        let proObj = {
+            item: objectId(prodId),
+            quantity: 1
         }
         return new Promise(async (resolve, reject) => {
             let userCart = await db.get().collection(collection.CART_COLLECTION).findOne({ user: objectId(userId) })
@@ -122,7 +122,7 @@ module.exports = {
                                 resolve()
                             })
                 }
-               
+
             } else {
                 let cartObj = {
                     user: objectId(userId),
@@ -141,7 +141,7 @@ module.exports = {
                     $match: { user: objectId(userId) }
                 },
                 {
-                    $unwind:'$products'
+                    $unwind: '$products'
                 },
                 {
                     $project: {
@@ -161,22 +161,22 @@ module.exports = {
                         item: 1, quantity: 1, product: { $arrayElemAt: ['$product', 0] }
                     }
                 }
-                
+
             ]).toArray()
-           // console.log('userhe',cartItems[0].product);
+            // console.log('userhe',cartItems[0].product);
             resolve(cartItems)
         }).catch(() => {
             resolve("not found")
         })
     },
-    getCartCount : (userId) => {
-        return new Promise (async(resolve,reject) => {
+    getCartCount: (userId) => {
+        return new Promise(async (resolve, reject) => {
             let count = 0
-           let cart = await db.get().collection(collection.CART_COLLECTION).findOne({user:objectId(userId)})
-           if(cart){
-            count = cart.products.length
-           }
-           resolve(count)
+            let cart = await db.get().collection(collection.CART_COLLECTION).findOne({ user: objectId(userId) })
+            if (cart) {
+                count = cart.products.length
+            }
+            resolve(count)
         })
     },
     changeProductQuantity: (details) => {
@@ -256,10 +256,47 @@ module.exports = {
                     }
                 }
             ]).toArray()
-            console.log("total",total);
+            console.log("total", total[0]);
             resolve(total[0].total)
 
 
         })
     },
+    placeOrder: (order, products, total) => {
+        return new Promise((resolve, reject) => {
+            // console.log("order",order,products,total);
+            let dateObj = new Date();
+            let month = dateObj.getUTCMonth() + 1;
+            let year = dateObj.getUTCFullYear();
+            let day = dateObj.getUTCDate();
+            let currentDate = day + "/" + month + "/" + year;
+
+            let status = order['payment-method'] === "COD" ? "placed" : "pending";
+            let orderObj = {
+                deliverDetails: {
+                    mobile: order.number,
+                    address: order.address,
+                    city: order.city,
+                    pincode: order.zip
+                },
+                userId: objectId(order.userId),
+                paymentMethod: order['payment-method'],
+                products: products,
+                totalAmount: total,
+                date: currentDate,
+                status: status
+            }
+            db.get().collection(collection.ORDER_COLLECTION).insertOne(orderObj).then((response) => {
+                //console.log("Order ID",response);
+                db.get().collection(collection.CART_COLLECTION).deleteOne({ user: objectId(order.userId) })
+                resolve(response.insertedId)
+            })
+        })
+    },
+    getCartProductList: (userId) => {
+        return new Promise(async (resolve, reject) => {
+            let cart = await db.get().collection(collection.CART_COLLECTION).findOne({ user: objectId(userId) })
+            resolve(cart.products)
+        })
+    }
 }

@@ -29,8 +29,8 @@
                                     class="viewCateg text-danger"><i class="fas fa-trash-alt"></i></a>
                             </td>
                             <td class="text-center">
-                                <a href="/admin/categoryEdit/{{this._id}}" type="button" onclick="editAlert()"
-                                    class="viewCateg text-success"><i class="fas fa-edit"></i></a>
+                                <a href="/admin/categoryEdit/{{this._id}}" type="button" id="sweetalert"
+                                    class="viewCateg text-success"><i class=" fas fa-edit"></i></a>
                             </td>
                         </tr>
                         {{/each}}
@@ -47,5 +47,11 @@
     $(document).ready(function () {
         $('#categoryTable').DataTable();
     });
+
+document.querySelector("#sweetalert").addEventListener('click', function(){
+  
+  Swal.fire('Any fool can use a computer')
+});
+
 
 </script>

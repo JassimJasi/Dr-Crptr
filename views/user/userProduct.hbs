@@ -1,22 +1,7 @@
-<!-- breadcrumb start-->
-<section class="breadcrumb prod-bg-img">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="breadcrumb_iner">
-                    <div class="breadcrumb_iner_item">
-                        <h2>Shop Category</h2>
-                        <p>Home <span>-</span> Shop Category</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<!-- breadcrumb start-->
+\
 
 <!--================Category Product Area =================-->
-<section class="cat_product_area section_padding">
+<section class="cat_product_area section_padding" style="margin-top: -90px;">
     <div class="container">
         <div class="row">
             <div class="col-lg-3">
@@ -84,16 +69,7 @@
 
                                 </select>
                             </div>
-                            <div class="single_product_menu d-flex">
-                                <h5>show :</h5>
-                                <div class="top_pageniation">
-                                    <ul>
-                                        <li>1</li>
-                                        <li>2</li>
-                                        <li>3</li>
-                                    </ul>
-                                </div>
-                            </div>
+                           
                             <div class="single_product_menu d-flex">
                                 <div class="input-group">
                                     <input type="text" class="form-control" placeholder="search"
@@ -114,9 +90,9 @@
                         <div class="single" data-menu="{{product.product_categorie}}">
                             <div class="single_product_item   ">
                                 <img src="/product-images/{{image.[0]}}" alt="">
+                                    <h3 class="mt-4">{{product.product_name}}</h3>
+                                    <h4>RS: {{product.price}}</h4>
                                 <div class="single_product_text">
-                                    <h4>{{product.product_name}}</h4>
-                                    <h3>RS: {{product.price}}</h3>
                                     <a href="#" class="add_cart">+ add to cart<i class="ti-heart"></i></a>
                                 </div>
                             </div>
