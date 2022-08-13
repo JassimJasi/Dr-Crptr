@@ -12,7 +12,7 @@
                         {{#if err}}
                         <p class="text-danger">{{err}}</p>
                         {{/if}}
-                            <button type="submit" class="btn btn-success mt-4">Submit</button>
+                            <button id="editCategr" type="submit" class="btn btn-success mt-4">Submit</button>
                         </form>
 
                     </div>
@@ -35,4 +35,23 @@
             }
         }
     })
+
+     $('#editCategr').on('click', function (e) {
+        e.preventDefault();
+        var form = $(this).parents('form');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to add this product to the cart",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Submit it!'
+        }).then((result) => {
+            if (result.value) {
+
+                form.submit();
+            }
+        });
+    });
 </script>

@@ -392,25 +392,4 @@
 
 
 
-    // grab the form from the DOM
-    const form = document.querySelector('#addProduct');
-
-    // listen to the 'submit' event on the form
-    form.addEventListener('submit', evt => {
-        // prevent the submit event 
-        evt.preventDefault();
-
-        // display an alert
-        swal('Are you sure?', {
-            buttons: true
-        }).then(val => {
-            // when the promise resolves,
-            // check the value that was passed
-            if (val) {
-                // if the value is true,
-                // actually submit the form
-                form.submit();
-            }
-        });
-    })
 </script>

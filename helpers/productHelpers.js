@@ -28,7 +28,8 @@ module.exports = {
     addCategory: (category) => {
         return new Promise(async (resolve, reject) => {
             //console.log(category);
-            let categoryRes = await db.get().collection(collection.CATEGORY_COLLECTION).findOne({ categoryName: category.categoryName })
+            category.categoryName = category.categoryName .toUpperCase()
+            let categoryRes = await db.get().collection(collection.CATEGORY_COLLECTION).findOne({ categoryName:  category.categoryName })
 
             if (categoryRes) {
                 reject('Category Already Exists')
@@ -79,6 +80,7 @@ module.exports = {
 
     },
     editCategory: (cateId, editedCate) => {
+        editedCate.categoryName = editedCate.categoryName.toUpperCase()
         return new Promise((resolve, reject) => {
             let sameCategory = db.get().collection(collection.CATEGORY_COLLECTION).findOne({ categoryName: editedCate.categoryName })
             if (sameCategory) {

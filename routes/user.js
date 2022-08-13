@@ -218,12 +218,14 @@ router.post('/remove-cart-product', (req, res, next) => {
 //checkout
 router.get('/checkout', verifyLogin, async (req, res) => {
   let total = await userHelper.getTotalAmount(req.session.user._id)
+
   res.render("user/checkout", { total, user: req.session.user })
 })
 //place order
 router.post('/place-order', async (req, res) => {
   let products = await userHelper.getCartProductList(req.body.userId);
   let totalPrice = await userHelper.getTotalAmount(req.body.userId)
+  
   userHelper.placeOrder(req.body, products, totalPrice).then((orderId) => {
    // console.log("place req body",req.body['payment-method']);
     if (req.body['payment-method'] ==='COD') {

@@ -203,7 +203,7 @@
                 <div class="form-group">
 
                     <div class="addInput w-100">
-                        <button id="singlebutton" type="submit" class="btn btn-primary w-100">Submit</button>
+                        <button id="prodEditBtn" type="submit" class="btn btn-primary w-100">Submit</button>
                     </div>
                 </div>
         </form>
@@ -323,7 +323,24 @@
         
         image.drawTo(imgcanvas);
     }
+ $('#prodEditBtn').on('click', function (e) {
+        e.preventDefault();
+        var form = $(this).parents('form');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to add this product to the cart",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Submit it!'
+        }).then((result) => {
+            if (result.value) {
 
+                form.submit();
+            }
+        });
+    });
 
     
 </script>
