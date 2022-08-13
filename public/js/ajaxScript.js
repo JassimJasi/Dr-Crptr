@@ -9,18 +9,34 @@ function addToCart(prodId) {
         let count = $('#cart-count').html()
         count = parseInt(count) + 1
         $('#cart-count').html(count)
-        alert("Success fully Add to cart")
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Your work has been saved',
+          showConfirmButton: false,
+          timer: 2000
+        })
       } else {
       }
       // console.log("ajax",response);
     },
     error: function () {
-      alert("Please Login")
-
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Please login!',
+        footer: '<a href="">Why do I have this issue?</a>'
+      }).then(function() {
+        window.location = "/userLogin";
+      });
     }
   })
-  return alert("Are you sure, you want to add to cart");
+  return ;
+ 
 }
+
+
+
 //script for cart.hbs
 function changeQuantity(cartId, proId, userId, count) {
   let quantity = parseInt(document.getElementById(proId).innerHTML)
@@ -37,8 +53,16 @@ function changeQuantity(cartId, proId, userId, count) {
     method: 'post',
     success: (response) => {
       if (response.removeProduct) {
-        alert("Product removed from cart")
-        location.reload()
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Product removed from cart',
+          showConfirmButton: false,
+          timer: 2000
+        }).then(() => {
+
+          location.reload()
+        })
       } else {
         document.getElementById(proId).innerHTML = quantity + count
         document.getElementById('total').innerHTML = response.total

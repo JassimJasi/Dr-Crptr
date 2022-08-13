@@ -4,225 +4,252 @@
 {{!--
 <!------ Include the above in your HEAD tag ----------> --}}
 <section class="pe-5 ps-5 text-center container-xxl position-relative bg-white d-flex p-0">
-    <div class="content p-2 d-flex justify-content-center" >
-    <form class="form-horizontal " action="/admin/addProduct" method="post" enctype="multipart/form-data" id="addProduct">
+    <div class="content p-2 d-flex justify-content-center">
+        <form class="form-horizontal " action="/admin/addProduct" method="post" enctype="multipart/form-data"
+            id="addProduct">
 
 
-        <!-- Form Name -->
-        <legend>PRODUCTS</legend>
+            <!-- Form Name -->
+            <legend>PRODUCTS</legend>
 
 
-        <!-- Text input-->
-        <div class="form-group text-center">
-            <label class=" control-label" for="product_name">PRODUCT NAME</label>
-            <div class="addInput">
-                <input id="product_name" name="product_name" placeholder="PRODUCT NAME" class="form-control input-md"
-                    required="" type="text">
+            <!-- Text input-->
+            <div class="d-flex flex-row">
+                <div class="mx-5">
+                    <div class="form-group text-center">
+                        <label class=" control-label" for="product_name">PRODUCT NAME</label>
+                        <div class="addInput">
+                            <input id="product_name" name="product_name" placeholder="PRODUCT NAME"
+                                class="form-control input-md" required="" type="text">
 
-            </div>
-        </div>
-
-        <!-- Text input-->
-        <div class="form-group">
-            <label class="control-label" for="product_name_fr">PRODUCT DESCRIPTION FR</label>
-            <div class="addInput">
-                <input id="product_name_fr" name="product_name_fr" placeholder="PRODUCT DESCRIPTION FR"
-                    class="form-control input-md" required="" type="text">
-
-            </div>
-        </div>
-
-        <!-- Select Basic -->
-        <div class="form-group">
-            <label class="control-label" for="product_categorie">PRODUCT CATEGORY</label>
-            <div class=" addInput">
-                <select id="product_categorie" name="product_categorie" class="form-control my-select selectpicker"
-                    data-container="body">
-                    <option disabled selected value>Select</option>
-                    {{#each category}}
-                    <option>{{this.categoryName}}</option>
-                    {{/each}}
-                </select>
-            </div>
-        </div>
-
-        <!-- Text input-->
-        <div class="form-group">
-            <label class=" control-label" for="available_quantity">AVAILABLE QUANTITY</label>
-            <div class="addInput">
-                <input id="available_quantity" name="available_quantity" placeholder="AVAILABLE QUANTITY"
-                    class="form-control input-md" required="" type="text">
-
-            </div>
-        </div>
-
-        {{!--
-        <!-- Text input-->
-        <div class="form-group">
-            <label class="col-12 col-lg-6 control-label" for="product_weight">PRODUCT WEIGHT</label>
-            <div class="col-12 col-lg-6">
-                <input id="product_weight" name="product_weight" placeholder="PRODUCT WEIGHT"
-                    class="form-control input-md" required="" type="text">
-
-            </div>
-        </div> --}}
-
-        <!-- Textarea -->
-        <div class="form-group">
-            <label class="control-label" for="product_description">PRODUCT DESCRIPTION</label>
-            <div class="addInput">
-                <textarea class="form-control" id="product_description" name="product_description"></textarea>
-            </div>
-        </div>
-
-        {{!--
-        <!-- Textarea -->
-        <div class="form-group">
-            <label class="col-12 col-lg-6 control-label" for="product_name_fr">PRODUCT DESCRIPTION FR</label>
-            <div class="col-12 col-lg-6">
-                <textarea class="form-control" id="product_name_fr" name="product_name_fr"></textarea>
-            </div>
-        </div> --}}
-
-        <!-- Text input-->
-        {{!-- <div class="form-group">
-            <label class="col-12 col-lg-6 control-label" for="percentage_discount">PERCENTAGE DISCOUNT</label>
-            <div class="col-12 col-lg-6">
-                <input id="percentage_discount" name="percentage_discount" placeholder="PERCENTAGE DISCOUNT"
-                    class="form-control input-md" required="" type="text">
-
-            </div>
-        </div> --}}
-
-        <!-- Text input-->
-        <div class="form-group">
-            <label class=" control-label" for="stock_alert">STOCK ALERT</label>
-            <div class=" addInput">
-                <input id="stock_alert" name="stock_alert" placeholder="STOCK ALERT" class="form-control input-md"
-                    required="" type="text">
-
-            </div>
-        </div>
-
-        <!-- Search input-->
-        <div class="form-group">
-            <label class=" control-label" for="stock_critical">Price</label>
-            <div class=" addInput">
-                <input id="stock_critical" name="price" placeholder="Price"
-                    class="form-control input-md" required="" type="search">
-
-            </div>
-        </div>
-
-        {{!--
-        <!-- Search input-->
-        <div class="form-group">
-            <label class="col-12 col-lg-6 control-label" for="tutorial">TUTORIAL</label>
-            <div class="col-12 col-lg-6">
-                <input id="tutorial" name="tutorial" placeholder="TUTORIAL" class="form-control input-md" required=""
-                    type="search">
-
-            </div>
-        </div> --}}
-        {{!--
-        <!-- Search input-->
-        <div class="form-group">
-            <label class="col-12 col-lg-6 control-label" for="tutorial_fr">TUTORIAL FR</label>
-            <div class="col-12 col-lg-6">
-                <input id="tutorial_fr" name="tutorial_fr" placeholder="TUTORIAL FR" class="form-control input-md"
-                    required="" type="search">
-
-            </div>
-        </div> --}}
-
-        <!-- Text input-->
-        {{!-- <div class="form-group">
-            <label class="col-12 col-lg-6 control-label" for="online_date">ONLINE DATE</label>
-            <div class="col-12 col-lg-6">
-                <input id="online_date" name="online_date" placeholder="ONLINE DATE" class="form-control input-md"
-                    required="" type="text">
-
-            </div>
-        </div> --}}
-
-        <!-- Text input-->
-        <div class="form-group">
-            <label class="control-label" for="author">Company</label>
-            <div class=" addInput">
-                <input id="author" name="author" placeholder="Company Name" class="form-control input-md" required=""
-                    type="text">
-
-            </div>
-        </div>
-        {{!--
-        <!-- Text input-->
-        <div class="form-group">
-            <label class="col-12 col-lg-6 control-label" for="enable_display">ENABLE DISPLAY</label>
-            <div class="col-12 col-lg-6">
-                <input id="enable_display" name="enable_display" placeholder="ENABLE DISPLAY"
-                    class="form-control input-md" required="" type="text">
-
-            </div>
-        </div> --}}
-
-        {{!--
-        <!-- Text input-->
-        <div class="form-group">
-            <label class="col-12 col-lg-6 control-label" for="comment">COMMENT</label>
-            <div class="col-12 col-lg-6">
-                <input id="comment" name="comment" placeholder="COMMENT" class="form-control input-md" required=""
-                    type="text">
-
-            </div>
-        </div> --}}
-
-        <!-- Text input-->
-        {{!-- <div class="form-group">
-            <label class="col-12 col-lg-6 control-label" for="approuved_by">APPROUVED BY</label>
-            <div class="col-12 col-lg-6">
-                <input id="approuved_by" name="approuved_by" placeholder="APPROUVED BY" class="form-control input-md"
-                    required="" type="text"> --}}
-
-                <!-- File Button -->
-                <div class="form-group mt-3">
-                    <label class=" control-label" for="filebutton">main_image</label>
-                    <div class=" addInput">
-                        <input id="filebutton" name="image" class="input-file" type="file" required>
+                        </div>
                     </div>
-                </div>
-                <!-- File Button -->
-                <div class="form-group">
-                    <label class="control-label" for="filebutton">images2</label>
-                    <div class=" addInput">
-                        <input id="filebutton" name="image" class="input-file" type="file" required>
-                    </div>
-                </div>
-                <!-- File Button -->
-                <div class="form-group">
-                    <label class="control-label" for="filebutton">images3</label>
-                    <div class=" addInput">
-                        <input id="filebutton" name="image" class="input-file" type="file" required>
-                    </div>
-                </div>
-                <!-- File Button -->
-                <div class="form-group">
-                    <label class="control-label" for="filebutton">images4</label>
-                    <div class=" addInput">
-                        <input id="filebutton" name="image" class="input-file" type="file" required>
-                    </div>
-                </div>
 
-                <!-- Button -->
-                <div class="form-group">
-                   
-                    <div class="addInput">
-                        <button id="singlebutton"  type="submit" class="btn btn-primary">Submit</button>
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="control-label" for="product_name_fr">PRODUCT DESCRIPTION FR</label>
+                        <div class="addInput">
+                            <input id="product_name_fr" name="product_name_fr" placeholder="PRODUCT DESCRIPTION FR"
+                                class="form-control input-md" required="" type="text">
+
+                        </div>
                     </div>
-                </div>
+
+                    <!-- Select Basic -->
+                    <div class="form-group">
+                        <label class="control-label" for="product_categorie">PRODUCT CATEGORY</label>
+                        <div class=" addInput">
+                            <select id="product_categorie" name="product_categorie"
+                                class="form-control my-select selectpicker" data-container="body">
+                                <option disabled selected value>Select</option>
+                                {{#each category}}
+                                <option>{{this.categoryName}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class=" control-label" for="available_quantity">AVAILABLE QUANTITY</label>
+                        <div class="addInput">
+                            <input id="available_quantity" name="available_quantity" placeholder="AVAILABLE QUANTITY"
+                                class="form-control input-md" required="" type="text">
+
+                        </div>
+                    </div>
+
+                    {{!--
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="col-12 col-lg-6 control-label" for="product_weight">PRODUCT WEIGHT</label>
+                        <div class="col-12 col-lg-6">
+                            <input id="product_weight" name="product_weight" placeholder="PRODUCT WEIGHT"
+                                class="form-control input-md" required="" type="text">
+
+                        </div>
+                    </div> --}}
+
+                    <!-- Textarea -->
+                    <div class="form-group">
+                        <label class="control-label" for="product_description">PRODUCT DESCRIPTION</label>
+                        <div class="addInput">
+                            <textarea class="form-control" id="product_description"
+                                name="product_description"></textarea>
+                        </div>
+                    </div>
+
+                    {{!--
+                    <!-- Textarea -->
+                    <div class="form-group">
+                        <label class="col-12 col-lg-6 control-label" for="product_name_fr">PRODUCT DESCRIPTION
+                            FR</label>
+                        <div class="col-12 col-lg-6">
+                            <textarea class="form-control" id="product_name_fr" name="product_name_fr"></textarea>
+                        </div>
+                    </div> --}}
+
+                    <!-- Text input-->
+                    {{!-- <div class="form-group">
+                        <label class="col-12 col-lg-6 control-label" for="percentage_discount">PERCENTAGE
+                            DISCOUNT</label>
+                        <div class="col-12 col-lg-6">
+                            <input id="percentage_discount" name="percentage_discount" placeholder="PERCENTAGE DISCOUNT"
+                                class="form-control input-md" required="" type="text">
+
+                        </div>
+                    </div> --}}
+
+                    <!-- Text input-->
+                    <!-- Search input-->
+                    <div class="form-group">
+                        <label class=" control-label" for="stock_critical">Price</label>
+                        <div class=" addInput">
+                            <input id="stock_critical" name="price" placeholder="Price" class="form-control input-md"
+                                required="" type="search">
+
+                        </div>
+                    </div>
+
+                    {{!--
+                    <!-- Search input-->
+                    <div class="form-group">
+                        <label class="col-12 col-lg-6 control-label" for="tutorial">TUTORIAL</label>
+                        <div class="col-12 col-lg-6">
+                            <input id="tutorial" name="tutorial" placeholder="TUTORIAL" class="form-control input-md"
+                                required="" type="search">
+
+                        </div>
+                    </div> --}}
+                    {{!--
+                    <!-- Search input-->
+                    <div class="form-group">
+                        <label class="col-12 col-lg-6 control-label" for="tutorial_fr">TUTORIAL FR</label>
+                        <div class="col-12 col-lg-6">
+                            <input id="tutorial_fr" name="tutorial_fr" placeholder="TUTORIAL FR"
+                                class="form-control input-md" required="" type="search">
+
+                        </div>
+                    </div> --}}
+
+                    <!-- Text input-->
+                    {{!-- <div class="form-group">
+                        <label class="col-12 col-lg-6 control-label" for="online_date">ONLINE DATE</label>
+                        <div class="col-12 col-lg-6">
+                            <input id="online_date" name="online_date" placeholder="ONLINE DATE"
+                                class="form-control input-md" required="" type="text">
+
+                        </div>
+                    </div> --}}
+
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="control-label" for="author">Company</label>
+                        <div class=" addInput">
+                            <input id="author" name="author" placeholder="Company Name" class="form-control input-md"
+                                required="" type="text">
+
+                        </div>
+                    </div>
+                    {{!--
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="col-12 col-lg-6 control-label" for="enable_display">ENABLE DISPLAY</label>
+                        <div class="col-12 col-lg-6">
+                            <input id="enable_display" name="enable_display" placeholder="ENABLE DISPLAY"
+                                class="form-control input-md" required="" type="text">
+
+                        </div>
+                    </div> --}}
+
+                    {{!--
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="col-12 col-lg-6 control-label" for="comment">COMMENT</label>
+                        <div class="col-12 col-lg-6">
+                            <input id="comment" name="comment" placeholder="COMMENT" class="form-control input-md"
+                                required="" type="text">
+
+                        </div>
+                    </div> --}}
+
+                    <!-- Text input-->
+                    {{!-- <div class="form-group">
+                        <label class="col-12 col-lg-6 control-label" for="approuved_by">APPROUVED BY</label>
+                        <div class="col-12 col-lg-6">
+                            <input id="approuved_by" name="approuved_by" placeholder="APPROUVED BY"
+                                class="form-control input-md" required="" type="text"> --}}
+
+                            <!-- File Button -->
+                        </div>
+                        <div class="mx-5">
+                            <div class="form-group mt-3">
+                                <label class=" control-label" for="filebutton">main_image</label>
+                                <div class=" addInput">
+                                    <input id="filebutton1" name="image" class="input-file" type="file"
+                                        onchange="upload1()" required>
+                                </div>
+                            </div>
+
+                            <div class="d-flex">
+                                <div>
+                                    <P>main_image</P>
+                                    <canvas id="canv1">main_image</canvas>
+                                </div>
+                                <div>
+                                    <P>images2</P>
+                                    <canvas id="canv2">images2</canvas>
+                                </div>
+                            </div>
+                            <!-- File Button -->
+                            <div class="form-group">
+                                <label class="control-label" for="filebutton">images2</label>
+                                <div class=" addInput">
+                                    <input id="filebutton2" name="image" class="input-file" type="file"
+                                        onchange="upload2()" required>
+                                </div>
+                            </div>
+                            <!-- File Button -->
+                            <div class="form-group">
+                                <label class="control-label" for="filebutton">images3</label>
+                                <div class=" addInput">
+                                    <input id="filebutton3" name="image" class="input-file" type="file"
+                                        onchange="upload3()" required>
+                                </div>
+
+                            </div>
+                            <div class="d-flex">
+                                <div>
+                                    <P>images3</P>
+                                    <canvas id="canv3">images3</canvas>
+                                </div>
+                                <div>
+                                    <P>images4</P>
+                                    <canvas id="canv4">images4</canvas>
+                                </div>
+                            </div>
+                            <!-- File Button -->
+                            <div class="form-group">
+                                <label class="control-label" for="filebutton">images4</label>
+                                <div class=" addInput">
+                                    <input id="filebutton4" name="image" class="input-file" type="file"
+                                        onchange="upload4()" required>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Button -->
+                    <div class="form-group">
+
+                        <div class="addInput w-100">
+                            <button id="singlebutton" type="submit" class="btn btn-primary w-100">Submit</button>
+                        </div>
+                    </div>
 
 
-    </form>
-</div>
+        </form>
+    </div>
 </section>
 {{!-- validation --}}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -231,24 +258,36 @@
 
 <style>
     .error {
-  color: red;
- 
-}
+        color: red;
+
+    }
 </style>
 
 <style>
     @media (min-width: 989px) {
-    
-    .addInput{
-        width: 500px;
-    }
-}
 
-@media (max-width: 988.98px) {
-  .addInput{
-        width: 100%;
+        .addInput {
+            width: 500px;
+        }
     }
-}
+
+    @media (max-width: 988.98px) {
+        .addInput {
+            width: 100%;
+        }
+    }
+
+    .swal2-popup {
+        font-size: 1.6rem !important;
+    }
+
+    canvas {
+        margin: 5px;
+        height: 95px;
+        border-style: solid;
+        border-width: 1px;
+        border-color: black;
+    }
 </style>
 
 <script>
@@ -266,7 +305,7 @@
 
             product_categorie: {
                 required: true,
-                
+
             },
 
             available_quantity: {
@@ -287,16 +326,91 @@
 
         },
         messages: {
-            
+
             image: {
-               required: "the Image is required"
+                required: "the Image is required"
 
             },
         }
     })
-   $(document).ready(function(){
-  $("#addProduct").validate(function(){
-    alert("Submitted");
-  });
-});
+    $(document).ready(function () {
+        $("#addProduct").validate(function () {
+            alert("Submitted");
+        });
+    });
+
+
+
+    $('#singlebutton').on('click', function (e) {
+        e.preventDefault();
+        var form = $(this).parents('form');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to add this product to the cart",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Submit it!'
+        }).then((result) => {
+            if (result.value) {
+
+                form.submit();
+            }
+        });
+    });
+
+
+    function upload1() {
+        var imgcanvas = document.getElementById("canv1");
+        var fileinput = document.getElementById("filebutton1");
+        var image = new SimpleImage(fileinput);
+
+        image.drawTo(imgcanvas);
+    }
+    function upload2() {
+        var imgcanvas = document.getElementById("canv2");
+        var fileinput = document.getElementById("filebutton2");
+        var image = new SimpleImage(fileinput);
+
+        image.drawTo(imgcanvas);
+    }
+    function upload3() {
+        var imgcanvas = document.getElementById("canv3");
+        var fileinput = document.getElementById("filebutton3");
+        var image = new SimpleImage(fileinput);
+
+        image.drawTo(imgcanvas);
+    }
+    function upload4() {
+        var imgcanvas = document.getElementById("canv4");
+        var fileinput = document.getElementById("filebutton4");
+        var image = new SimpleImage(fileinput);
+
+        image.drawTo(imgcanvas);
+    }
+
+
+
+    // grab the form from the DOM
+    const form = document.querySelector('#addProduct');
+
+    // listen to the 'submit' event on the form
+    form.addEventListener('submit', evt => {
+        // prevent the submit event 
+        evt.preventDefault();
+
+        // display an alert
+        swal('Are you sure?', {
+            buttons: true
+        }).then(val => {
+            // when the promise resolves,
+            // check the value that was passed
+            if (val) {
+                // if the value is true,
+                // actually submit the form
+                form.submit();
+            }
+        });
+    })
 </script>
