@@ -1,8 +1,10 @@
 <div class="container-xxl position-relative bg-white d-flex p-0 products" ng-app="app" ng-controller="AppCtrl">
 
     <div class="content p-4">
+        <a type="button" class="btn btn-success" href="/admin/addCoupon"><i class="fas fa-plus"></i> Add
+                Category</a>
         <div class="actionpane  text-center">
-            <h2 class=" fw-bold fw-larger">View User</h2>
+            <h2 class=" fw-bold fw-larger">Coupon Management</h2>
         </div>
 
         <div class="tables p-3 ">
@@ -10,21 +12,23 @@
                 id="userTable">
                 <thead class="">
                     <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Delete/Edit</th {{!-- <th>Status</th> --}}
+                        <th>Coupon Id</th>
+                        <th>Coupon Name</th>
+                        <th>Coupon Code</th>
+                        <th>Discount</th>
+                        <th>Used Users</th>
+                        <th>Delete/Edit</th >{{!-- <th>Status</th> --}}
                     </tr>
                 </thead>
                 <tbody>
 
-                    {{#each userData}}
+                    {{#each couponDetails}}
                     <tr>
                         <td>{{this._id}}</td>
-                        <td><span class="name">{{this.displayName}}</span>
+                        <td>{{this.couponName}}</td>
+                        <td><span class="name">{{this.couponCode}}</span>
                         </td>
-                        <td>{{this.Email}}</td>
+                        <td>{{this.discount}} %</td>
                         <td>{{this.Phone}}</td>
                         <td class="text-center">
                             <a href="/admin/userDel/{{this._id}}" type="button" onclick="delAlert()"

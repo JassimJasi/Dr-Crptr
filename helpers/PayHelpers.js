@@ -30,8 +30,10 @@ module.exports = {
             let hmac = crypto.createHmac('sha256', 'EMeKQnO1HGUBbqmPR9o8afYw');
 
             hmac.update(details['payment[razorpay_order_id]'] + '|' + details['payment[razorpay_payment_id]']);
+            //console.log("asdfgdscd",details['payment[razorpay_order_id]']);
             hmac = hmac.digest('hex')
             if (hmac == details['payment[razorpay_signature]']) {
+                //console.log("done");
                 resolve()
             } else {
                 reject()
@@ -49,6 +51,12 @@ module.exports = {
                     }).then(() => {
                         resolve()
                     })
+        })
+    },
+    getOrderDetails: (userId) => {
+        return new Promise(async(resolve, reject) => {
+          let orders =  await db.get().collection(collection.ORDER_COLLECTION).find({ userId: objectId(userId) }).toArray()
+          resolve(orders)
         })
     }
 }

@@ -1,0 +1,106 @@
+<div class="container-xxl position-relative bg-white d-flex p-0 products" ng-app="app" ng-controller="AppCtrl">
+
+    <div class="content p-4">
+        <div class="actionpane  text-center">
+            <h2 class=" fw-bold fw-larger">Orders</h2>
+        </div>
+
+        <div class="tables p-3 ">
+            <table class="table  table-striped table-bordered border table-hover table-checkable order-column dataTable mt-3"
+                id="userTable">
+                <thead class="">
+                    <tr>
+                        <th>ID</th>
+                        <th>Mobile</th>
+                        <th>Pincode</th>
+                        <th>Amount</th>
+                        <th>Payment</th>
+                        <th>Status</th>
+                        <th>View Product</th> {{!-- <th>Status</th> --}}
+                        <th>Shipping</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {{#each orders}}
+                    <tr>
+                        <td>{{this._id}}</td>
+                        <td><span class="name">{{this.deliverDetails.mobile}}</span>
+                        </td>
+                        <td>{{this.deliverDetails.pincode}}</td>
+                        <td>{{this.totalAmount}}</td>
+                        <td>{{this.paymentMethod}}</td>
+                        <td>{{this.status}}</td>
+                        <td class="text-center">
+                            <button class="btn btn-primary">View Products</button>
+                        </td>
+                        <td class="text-center">
+                            <button onclick="shipBtn({{this._id}})" class="btn btn-success">Ship</button>
+                            <button class="btn btn-danger">Cancel</button>
+                        </td>
+                        
+                        {{!-- <td>{{status}}</td> --}}
+                        {{!-- <td><span class="label label-success"> Available </span></td> --}}
+                        {{!-- <td>{{this.date}}</td> --}}
+                    </tr>
+                    {{/each}}
+                    {{!--
+                    <!-- Modal HTML -->--}}
+                    
+
+
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .products {
+        .name {
+            border-bottom: 1px dotted #ccc;
+            cursor: pointer;
+        }
+    }
+</style>
+<script>
+function shipBtn(orderId) {
+    $.ajax({
+      url: '/ShippingConfirm/' + orderId,
+      method: 'get',
+      success: (response) => {
+        console.log(response);
+        if (response.status) {
+          Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'Shipped',
+            showConfirmButton: false,
+            timer: 2000
+          })
+        } else {
+        }
+        // console.log("ajax",response);
+      },
+      error: function () {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Please login!',
+        }).then(function() {
+          window.location = "/userLogin";
+        });
+      }
+    })
+    return ;
+   
+  }
+
+   
+
+    $(document).ready(function () {
+        $('#userTable').DataTable();
+    });
+</script>

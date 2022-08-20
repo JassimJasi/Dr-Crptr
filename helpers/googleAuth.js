@@ -25,6 +25,8 @@ module.exports = function(passport) {
         userHelper.googleAccount(userData).then((data) => {
             console.log("googleAc",data);
             return done(null, data)
+        }).catch((err) =>{
+            console.log(err);
         })
     }
     )),

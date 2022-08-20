@@ -6,6 +6,14 @@ const verify = require('../helpers/verify');
 const productHelpers = require('../helpers/productHelpers');
 const upload = require('../middleware/multer');
 const userHelpers = require('../helpers/userHelpers');
+const { Db } = require('mongodb');
+const adminVerification = (req, res, next) => {
+  if (req.session.adminLoggedIn) {
+    next()
+  } else {
+    res.redirect('/admin')
+  }
+}
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {
@@ -81,16 +89,14 @@ router.get('/dashbord', (req, res) => {
 });
 
 //view-users
-router.get('/view-user', (req, res) => {
-  if (req.session.admin) {
+router.get('/view-user',adminVerification, (req, res) => {
+  
     let admin = req.session.admin;
     adminHelper.viewUser().then((userData) => {
       console.log("view user", userData);
       res.render('admin/viewUser', { admin, userData, layout: "adminLayout" });
     })
-  } else {
-    res.redirect('/admin');
-  }
+  
 })
 
 //delete user 
@@ -246,7 +252,7 @@ router.post('/addCategory', (req, res) => {
 //delete category 
 router.get('/categoryDel/:id', (req, res) => {
   let cateId = req.params.id
-  console.log(cateId);
+  //console.log(cateId);
   productHelpers.delCategory(cateId).then(() => {
     res.redirect('/admin/viewCategory')
   })
@@ -255,16 +261,12 @@ router.get('/categoryDel/:id', (req, res) => {
 //edit Category
 
 
-
-
-
-
 router.get('/categoryEdit/:id', async (req, res) => {
   let err = req.session.editCateErr
   let cateId = req.params.id
   let admin = req.session.admin;
    productHelpers.getCateById(cateId).then((category) => {
-    console.log(category);
+    //console.log(category);
     res.render('admin/editCategory', { admin, err, layout: "adminLayout", category })
   }).catch((errmass) => {
     res.status(404).send(errmass);
@@ -279,6 +281,59 @@ router.post('/editCategory/:id', (req, res) => {
     res.redirect('back')
   })
 })
+
+router.get('/adminOrder',(req,res) => {
+  adminHelper.getAllOrderDetails().then((orders) => {
+    res.render('admin/adminOrder',{layout: "adminLayout",orders})
+  })
+})
+router.get('/ShippingConfirm/:id',(req,res) => {
+  adminHelper.confirmShipping(req.params.id).then((response) => {
+    console.log("shipp",response);
+    res.json(response)
+  })
+})
+
+//Banner
+router.get('/banner',(req,res) => {
+  res.render('admin/viewBanner',{layout: "adminLayout"})
+})
+router.get('/addBanner',(req,res) => {
+  res.render('admin/addBanner',{layout: "adminLayout"})
+})
+router.post('/addBanner', upload.single('Image'),(req,res) => {
+  let image = req.file.filename
+  console.log(req.file);
+  adminHelper.addBanner(req.body,image).then(() => {
+    res.redirect('/admin/addBanner')
+    // if (req.files.Image) {
+    //   let image = req.files.Image
+    //   image.mv('./public/product-images/bannerImg' + id + '.jpg')
+    // }
+  })
+})
+
+//Coupon Management
+router.get('/couponManagement',(req,res) => {
+  adminHelper.viewCoupon().then((couponDetails) => {
+    res.render('admin/viewCoupon',{layout: "adminLayout",couponDetails})
+  })
+})
+router.get('/addCoupon',(req,res) => {
+    res.render('admin/addCoupon',{layout: "adminLayout"})
+})
+
+router.post('/addCoupon',(req,res) => {
+  adminHelper.addCoupon(req.body).then(() => {
+    res.render('admin/addCoupon',{layout: "adminLayout"})
+  })
+})
+//chart
+router.get('/chart',(req,res) => {
+  res.render('admin/chart',{layout: "adminLayout"})
+})
+
+
 
 //adminLogout
 router.get('/adminLogout', (req, res) => {

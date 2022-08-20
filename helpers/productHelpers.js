@@ -18,6 +18,18 @@ module.exports = {
             resolve(products);
         })
     },
+    viewCateProducts: (userCate) => {
+        return new Promise(async(resolve,reject) => {
+          //  let category = ''product.product_categorie'';
+            let products = await db.get().collection(collection.PRODUCT_COLLECTION).aggregate(
+                [
+                    { $match:{'product.product_categorie':userCate}}
+                ]
+            ).toArray()
+            console.log("viewCateProducts ",products);
+            resolve(products);
+        })
+    },
     fourProduct: () => {
         return new Promise(async (resolve, reject) => {
             let fourProducts = await db.get().collection(collection.PRODUCT_COLLECTION).find().limit(4).toArray()

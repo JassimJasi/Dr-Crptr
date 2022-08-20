@@ -2,9 +2,10 @@
   <div class="container">
     <div class="cart_inner">
       <div class="table-responsive">
-        {{!-- {{#if cartErr}}
-        <p class="text-danger">cartErr</p>
-        {{/if}} --}}
+
+        {{#if errMes}}
+        <p Swal.fire(errMes)></p>
+        {{/if}}
         <table class="table">
           <thead>
             <tr>
@@ -80,8 +81,7 @@
               </td>
             </tr>
             <tr class="shipping_area">
-              <td></td>
-              <td></td>
+              
               {{!-- <td>
                 <h5>Shipping</h5>
               </td> --}}

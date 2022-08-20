@@ -78,5 +78,47 @@ module.exports = {
                     resolve()
                 })
         })
+    },
+    getAllOrderDetails : () => {
+        return new Promise((resolve,reject) => {
+           let orders = db.get().collection(collection.ORDER_COLLECTION).find().toArray()
+            resolve(orders)
+        })
+    },
+    confirmShipping: (order_id) => {
+        return new Promise((resolve,reject) => {
+            console.log("shipp user-help",order_id);
+            db.get().collection(collection.ORDER_COLLECTION)
+                .updateOne({ _id: objectId(order_id) }, {
+                    $set: {
+                        status: Shipped,                        
+                    }
+                }).then((response) => {
+                    console.log("shipp user-help",response);
+                    resolve(response)
+                })
+        })
+    },
+    addBanner : (bannerDetails,image) => {
+        return new Promise((resolve,reject) => {
+            db.get().collection(collection.BANNER_COLLECTION).insertOne({bannerDetails,image}).then(() => {
+                resolve()
+            })
+        })
+    },
+    addCoupon : (couponDetails) => {
+        couponDetails.usedUserDetails = [null]
+        return new Promise((resolve,reject) => {
+            db.get().collection(collection.COUPON_COLLECTION).insertOne(couponDetails).then(() => {
+                console.log("cou",couponDetails);
+                resolve()
+            })
+        })
+    },
+    viewCoupon : () => {
+        return new Promise(async(resolve,reject) => {
+          let couponDetails = await  db.get().collection(collection.COUPON_COLLECTION).find().toArray()
+                resolve(couponDetails);
+        })
     }
 }

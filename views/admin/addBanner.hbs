@@ -1,0 +1,155 @@
+{{!--
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script> --}}
+{{!--
+<!------ Include the above in your HEAD tag ----------> --}}
+<section class="pe-5 ps-5 text-center container-xxl position-relative bg-white d-flex p-0">
+    <div class="content p-2 d-flex justify-content-center mt-5">
+        <form class="form-horizontal " action="/admin/addBanner" method="post" enctype="multipart/form-data"
+            id="addBanner">
+
+
+            <!-- Form Name -->
+            <legend>Add Banner</legend>
+            <div class="d-flex p- px-4">
+
+                <div class="border p-4 bg-light">
+                    <!-- Text input-->
+                    <div class="form-group text-center mt-1">
+                        <label class=" control-label" for="product_name ">Banner Headline</label>
+                        <div class="addInput">
+                            <input id="product_name" name="Headline" placeholder="Banner Headline"
+                                class="form-control input-md mt-2" required="" type="text">
+
+                        </div>
+                    </div>
+                    <div class="form-group text-center mt-1">
+                        <label class=" control-label" for="product_name ">Banner Subline</label>
+                        <div class="addInput">
+                            <input id="product_name" name="Subline" placeholder="Banner Subline"
+                                class="form-control input-md mt-2" required="" type="text">
+
+                        </div>
+                    </div>
+                     {{!-- <div class="form-group text-center mt-1">
+                        <label class=" control-label" for="product_name ">Product Categoty</label>
+                        <div class="addInput">
+                            <input id="product_name" name="Subline" placeholder="Product Details(optional)"
+                                class="form-control input-md mt-2" required="" type="text">
+
+                        </div>
+                    </div> --}}
+                </div>
+                <div class="text-center border p-1 ms-1  bg-light">
+                    <div class="form-group text-center mt-3">
+                        <label class=" control-label" for="product_name">Banner Image</label>
+                        <div class=" addInput">
+                            <div>
+
+                                <canvas id="canvImg">Banner Image</canvas>
+                            </div>
+                            <input type="file" id="bannerImg" name="Image" class="input-file ms-5" 
+                                onchange="uploadimg()" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{#if errMes}}
+            <p class="text-danger">{{errMes}}</p>
+            {{/if}}
+            <!-- Button -->
+            <div class="form-group mt-">
+
+                <div class="addInput w-100 px-4 pt-1 ">
+                    <button type="submit" class="btn btn-primary w-100 fe-bold">Submit</button>
+                </div>
+            </div>
+
+
+        </form>
+    </div>
+</section>
+
+<style>
+    @media (min-width: 989px) {
+
+        .addInput {
+            width: 500px;
+        }
+    }
+
+    @media (max-width: 988.98px) {
+        .addInput {
+            width: 100%;
+        }
+    }
+</style>
+{{!-- validation --}}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script>
+
+<style>
+    .error {
+        color: red;
+
+    }
+
+    .swal2-popup {
+        font-size: 1.6rem !important;
+    }
+
+    canvas {
+        width: auto%;
+        height: auto;
+        margin: 5px;
+        height: 95px;
+        border-style: solid;
+        border-width: 1px;
+        border-color: black;
+    }
+</style>
+<script>
+    $("#addCategory").validate({
+        rules: {
+            categoryName: {
+                required: true,
+                minlength: 3
+            }
+        },
+        messages: {
+            categoryName: {
+                required: "Please Fill"
+
+            }
+        }
+    })
+
+    $('#addCategr').on('click', function (e) {
+        e.preventDefault();
+        var form = $(this).parents('form');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to add this product to the cart",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Submit it!'
+        }).then((result) => {
+            if (result.value) {
+
+                form.submit();
+            }
+        });
+    });
+
+    function uploadimg() {
+        var imgcanvas = document.getElementById("canvImg");
+        var fileinput = document.getElementById("bannerImg");
+        var image = new SimpleImage(fileinput);
+
+        image.drawTo(imgcanvas);
+    }
+</script>

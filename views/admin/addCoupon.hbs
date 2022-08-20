@@ -1,0 +1,133 @@
+{{!--
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script> --}}
+{{!--
+<!------ Include the above in your HEAD tag ----------> --}}
+<section class="pe-5 ps-5 text-center container-xxl position-relative bg-white d-flex p-0">
+    <div class="content p-2 d-flex justify-content-center mt-5">
+        <form class="form-horizontal " action="/admin/addCoupon" method="post"
+            id="addBanner">
+
+
+            <!-- Form Name -->
+            <legend>Add Coupon</legend>
+            <div class="">
+
+                <div class="border p-4 bg-light">
+                    <!-- Text input-->
+                    <div class="form-group text-center mt-1">
+                        <label class=" control-label" for="product_name ">Coupon Name</label>
+                        <div class="addInput">
+                            <input id="product_name" name="couponName" placeholder="Coupon Name"
+                                class="form-control input-md mt-2" required="" type="text">
+
+                        </div>
+                    </div>
+                    <div class="form-group text-center mt-1">
+                        <label class=" control-label" for="product_name ">Coupon Code</label>
+                        <div class="addInput">
+                            <input id="product_name" name="couponCode" placeholder="Coupon Code"
+                                class="form-control input-md mt-2" required="" type="text">
+
+                        </div>
+                    </div>
+                    <div class="form-group text-center mt-1">
+                        <label class=" control-label" for="product_name ">Discount</label>
+                        <div class="addInput">
+                            <input id="product_name" name="discount" placeholder="Discount"
+                                class="form-control input-md mt-2" required="" type="text">
+
+                        </div>
+                    </div>
+            </div>
+            {{#if errMes}}
+            <p class="text-danger">{{errMes}}</p>
+            {{/if}}
+            <!-- Button -->
+            <div class="form-group ">
+
+                <div class="addInput w-100  pt-1 ">
+                    <button type="submit" class="btn btn-primary w-100 fe-bold">Submit</button>
+                </div>
+            </div>
+
+
+        </form>
+    </div>
+</section>
+
+<style>
+    @media (min-width: 989px) {
+
+        .addInput {
+            width: 500px;
+        }
+    }
+
+    @media (max-width: 988.98px) {
+        .addInput {
+            width: 100%;
+        }
+    }
+</style>
+{{!-- validation --}}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script>
+
+<style>
+    .error {
+        color: red;
+
+    }
+
+    .swal2-popup {
+        font-size: 1.6rem !important;
+    }
+
+    canvas {
+        width: auto%;
+        height: auto;
+        margin: 5px;
+        height: 95px;
+        border-style: solid;
+        border-width: 1px;
+        border-color: black;
+    }
+</style>
+<script>
+    $("#addCategory").validate({
+        rules: {
+            categoryName: {
+                required: true,
+                minlength: 3
+            }
+        },
+        messages: {
+            categoryName: {
+                required: "Please Fill"
+
+            }
+        }
+    })
+
+    $('#addCategr').on('click', function (e) {
+        e.preventDefault();
+        var form = $(this).parents('form');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to add this product to the cart",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Submit it!'
+        }).then((result) => {
+            if (result.value) {
+
+                form.submit();
+            }
+        });
+    });
+</script>

@@ -1,5 +1,3 @@
-
-
 function addToCart(prodId) {
   $.ajax({
     url: '/add-To-Cart/' + prodId,
@@ -12,7 +10,42 @@ function addToCart(prodId) {
         Swal.fire({
           position: 'center',
           icon: 'success',
-          title: 'Your work has been saved',
+          title: 'Added to Cart',
+          showConfirmButton: false,
+          timer: 2000
+        })
+      } else {
+      }
+      // console.log("ajax",response);
+    },
+    error: function () {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Please login!',
+        footer: '<a href="">Why do I have this issue?</a>'
+      }).then(function() {
+        window.location = "/userLogin";
+      });
+    }
+  })
+  return ;
+ 
+}
+
+function addToWishList(prodId) {
+  $.ajax({
+    url: '/add-To-wishlist/' + prodId,
+    method: 'get',
+    success: (response) => {
+      if (response.status) {
+        let count = $('#cart-count').html()
+        count = parseInt(count) + 1
+        $('#cart-count').html(count)
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Added to wish list',
           showConfirmButton: false,
           timer: 2000
         })
@@ -36,7 +69,6 @@ function addToCart(prodId) {
 }
 
 
-
 //script for cart.hbs
 function changeQuantity(cartId, proId, userId, count) {
   let quantity = parseInt(document.getElementById(proId).innerHTML)
@@ -52,6 +84,7 @@ function changeQuantity(cartId, proId, userId, count) {
     },
     method: 'post',
     success: (response) => {
+      console.log(response);
       if (response.removeProduct) {
         Swal.fire({
           position: 'center',
@@ -85,6 +118,21 @@ function removeCartProduct(cartId, proId) {
     }
   })
 }
+function removeWishlistProduct(cartId, proId) {
+  $.ajax({
+    url: '/remove-Wishlist-product',
+    data: {
+      cart: cartId,
+      product: proId
+    },
+    method: 'post',
+    success: (response) => {
+      alert('remove Product')
+      location.reload()
+    }
+  })
+}
+
 //order placement
 
 
@@ -96,9 +144,17 @@ $('#checkout-form').submit((e) => {
     data: $('#checkout-form').serialize(),
     success: (response) => {
       console.log("ajax", response);
-      alert(response)
+      
       if (response.codSuccess) {
-        location.href = '/';
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Payment Success',
+          showConfirmButton: false,
+          timer: 2000
+        }).then(() => {
+          location.href = '/';
+        })
       } else {
         razorpayPayment(response);
       }
@@ -145,10 +201,25 @@ function verifyPayment(payment, order) {
     method: 'post',
     success: (response) => {
       if (response.status) {
-        location.href = '/'
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Payment Success',
+          showConfirmButton: false,
+          timer: 2000
+        }).then(() => {
+          location.href = '/';
+        })
+       
       } else {
-        alert("Payment Failed")
+        Swal.fire({
+          icon: 'Failed',
+          title: 'Oops...',
+          text: 'Payment Failed!',
+          
+        })
       }
     }
   })
 }
+
