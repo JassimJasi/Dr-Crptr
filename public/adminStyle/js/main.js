@@ -89,14 +89,15 @@
 
 
     // Salse & Revenue Chart
-    var ctx2 = $("#salse-revenue").get(0).getContext("2d");
+    (([dailyTotalSales]) => {
+        var ctx2 = $("#salse-revenue").get(0).getContext("2d");
     var myChart2 = new Chart(ctx2, {
         type: "line",
         data: {
-            labels: ["2016", "2017", "2018", "2019", "2020", "2021", "2022"],
+            labels: [dailyTotalSales._id],
             datasets: [{
                     label: "Salse",
-                    data: [15, 30, 55, 45, 70, 65, 85],
+                    data: [dailyTotalSales.total],
                     backgroundColor: "rgba(0, 156, 255, .5)",
                     fill: true
                 },
@@ -112,7 +113,32 @@
             responsive: true
         }
     });
-    
+    })
+    (([dailyTotalSales]) => {
+    var ctx2 = $("#salse-revenue").get(0).getContext("2d");
+    var myChart2 = new Chart(ctx2, {
+        type: "line",
+        data: {
+            labels: [dailyTotalSales._id],
+            datasets: [{
+                    label: "Salse",
+                    data: [dailyTotalSales.total],
+                    backgroundColor: "rgba(0, 156, 255, .5)",
+                    fill: true
+                },
+                {
+                    label: "Revenue",
+                    data: [dailyTotalSales._total],
+                    backgroundColor: "rgba(0, 156, 255, .3)",
+                    fill: true
+                }
+            ]
+            },
+        options: {
+            responsive: true
+        }
+    });
+})
 
 
     // Single Line Chart

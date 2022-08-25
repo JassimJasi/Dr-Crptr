@@ -30,12 +30,12 @@
                         <td>{{this.deliverDetails.pincode}}</td>
                         <td>{{this.totalAmount}}</td>
                         <td>{{this.paymentMethod}}</td>
-                        <td>{{this.status}}</td>
+                        <td id="orderStatus">{{this.status}}</td>
                         <td class="text-center">
                             <button class="btn btn-primary">View Products</button>
                         </td>
                         <td class="text-center">
-                            <button onclick="shipBtn({{this._id}})" class="btn btn-success">Ship</button>
+                            <button onclick="shipBtn('{{this._id}}')" class="btn btn-success">Ship</button>
                             <button class="btn btn-danger">Cancel</button>
                         </td>
                         
@@ -67,12 +67,14 @@
 </style>
 <script>
 function shipBtn(orderId) {
+  console.log(orderId)
     $.ajax({
-      url: '/ShippingConfirm/' + orderId,
+      url: '/admin/shippingConfirm/' + orderId,
       method: 'get',
       success: (response) => {
-        console.log(response);
-        if (response.status) {
+        
+        if (response === "Shipped") {
+          
           Swal.fire({
             position: 'center',
             icon: 'success',
@@ -80,6 +82,7 @@ function shipBtn(orderId) {
             showConfirmButton: false,
             timer: 2000
           })
+           location.reload()
         } else {
         }
         // console.log("ajax",response);
@@ -90,7 +93,7 @@ function shipBtn(orderId) {
           title: 'Oops...',
           text: 'Please login!',
         }).then(function() {
-          window.location = "/userLogin";
+          window.location = "/admin";
         });
       }
     })

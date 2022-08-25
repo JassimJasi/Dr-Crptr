@@ -2,7 +2,8 @@ const db = require('../config/connection');
 const collection = require('../config/collections');
 const bcrypt = require('bcrypt');
 const { response } = require('express');
-var objectId = require('mongodb').ObjectId;
+const objectId = require('mongodb').ObjectId;
+const invNum = require('invoice-number')
 
 module.exports = {
     doSignup: (userdata) => {
@@ -349,7 +350,7 @@ module.exports = {
                     }
                 }
             ]).toArray()
-            console.log("total", total);
+            //console.log("total", total);
             if (total[0] === undefined) {
                 resolve()
             } else {
@@ -358,6 +359,37 @@ module.exports = {
             }
 
 
+        })
+    },
+    userAddress : (checkoutDetails) =>{
+        return new Promise(async(resolve,reject) => {
+            let address = {
+                userId : objectId(checkoutDetails.userId),
+                name : checkoutDetails.name,
+                addNumber : checkoutDetails.number,
+                addEmail : checkoutDetails.email,
+                address : checkoutDetails.address,
+                country : checkoutDetails.country,
+                city: checkoutDetails.city,
+                zip:checkoutDetails.zip
+            }
+           let userAddress = await db.get().collection(collection.USER_ADDRESS).findOne({userId : objectId(checkoutDetails.userId)})
+           if(userAddress){
+               resolve()
+           }else {
+            db.get().collection(collection.USER_ADDRESS).insertOne(address).then(() => {
+                resolve()
+            })
+           }
+        })
+    },
+    getUserAddress : (userId) => {
+        return new Promise(async(resolve,reject) => {
+            db.get().collection(collection.USER_ADDRESS).findOne({userId : objectId(userId)}).then((address) => {
+                resolve(address)
+            }).catch(() => {
+                resolve()
+            })
         })
     },
     getOrderProducts: (orderId) => {
@@ -394,7 +426,8 @@ module.exports = {
             resolve(orderItems)
         })
     },
-    placeOrder: (order, products, total) => {
+    placeOrder: (order, products, total, couponDetails) => {
+        console.log("coupon",couponDetails);
         return new Promise((resolve, reject) => {
             // console.log("order",order,products,total);
             let dateObj = new Date();
@@ -402,26 +435,39 @@ module.exports = {
             let year = dateObj.getUTCFullYear();
             let day = dateObj.getUTCDate();
             let currentDate = day + "/" + month + "/" + year;
+            // let invoice = _id.spilt('').pop()
 
             let status = order['payment-method'] === "COD" ? "placed" : "pending";
             let orderObj = {
                 deliverDetails: {
+                    userName: order.name,
                     mobile: order.number,
                     address: order.address,
                     city: order.city,
                     pincode: order.zip
                 },
+                // invoice : invoice,
                 userId: objectId(order.userId),
                 paymentMethod: order['payment-method'],
                 products: products,
                 totalAmount: total,
                 date: currentDate,
+                couponId :  objectId(couponDetails?._id),
                 status: status
             }
             db.get().collection(collection.ORDER_COLLECTION).insertOne(orderObj).then((response) => {
                 //console.log("Order ID",response);
                 if (response.status === "placed") {
                     db.get().collection(collection.CART_COLLECTION).deleteOne({ user: objectId(order.userId) })
+                }
+                if(couponDetails){
+                console.log("coupon",couponDetails);
+                db.get().collection(collection.COUPON_COLLECTION)
+                .updateOne({ _id: objectId(couponDetails._id) },
+                    {
+                        $push: { usedUserDetails: objectId(order.userId) }
+    
+                    })
                 }
                 resolve(response.insertedId)
             })
@@ -432,5 +478,6 @@ module.exports = {
             let cart = await db.get().collection(collection.CART_COLLECTION).findOne({ user: objectId(userId) })
             resolve(cart.products)
         })
-    }
+    },
+    
 }

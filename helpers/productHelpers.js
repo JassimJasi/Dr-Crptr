@@ -26,7 +26,7 @@ module.exports = {
                     { $match:{'product.product_categorie':userCate}}
                 ]
             ).toArray()
-            console.log("viewCateProducts ",products);
+           // console.log("viewCateProducts ",products);
             resolve(products);
         })
     },

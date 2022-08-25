@@ -4,16 +4,19 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const hbs = require('express-handlebars');
-var session = require('express-session')
-const fileUpload = require('express-fileupload')
+var session = require('express-session');
+const fileUpload = require('express-fileupload');
+const moment = require('moment')
 
 const db = require('./config/connection');
-const passport = require('passport')
+const passport = require('passport');
 
 var userRouter = require('./routes/user');
 var adminRouter = require('./routes/admin');
 
 var app = express();
+
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -32,6 +35,13 @@ app.use(session({ secret: "key", resave: true, saveUninitialized: true, cookie: 
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+const hbsHelpers = hbs.create({})
+hbsHelpers.handlebars.registerHelper('formatTime', function(date, format) {
+  var mmnt = moment(date);
+  return mmnt.format(format);
+   
+});
 
 
 db.connect((err) => {

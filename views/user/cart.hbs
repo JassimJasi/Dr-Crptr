@@ -12,7 +12,7 @@
               <th scope="col">Product</th>
               <th scope="col">Price</th>
               <th scope="col">Quantity</th>
-              
+
               <th scope="col" class="text-center">Remove</th>
             </tr>
           </thead>
@@ -53,20 +53,28 @@
                 <h5>{{totalValue}}</h5>
               </td> --}}
               <td class=" text-center">
-                <p onclick="removeCartProduct('{{this._id}}','{{this.product._id}}')"><i class="removeButton fas fa-times text-danger fw-bold" ></i></p>
+                <p onclick="removeCartProduct('{{this._id}}','{{this.product._id}}')"><i
+                    class="removeButton fas fa-times text-danger fw-bold"></i></p>
               </td>
             </tr>
             {{/each}}
-          
+
+
             <tr class="bottom_button">
-              <td>
-                {{!-- <a class="btn_1" href="">Coupon</a> --}}
+              <td class="">
+                <a class="btn_1" href="/userProduct">Add Products</a>
               </td>
               <td></td>
               <td></td>
-              <td>
-                <div class="cupon_text float-right">
-                  <a class="btn_1" href="/userProduct">Add Products</a>
+              <hr>
+
+              <td class="">
+                <div class="coupon cupon_text float-right">
+                  <form action="" id="couponForm">
+                    <input class=" mx-3 border-0 px-3 rounded-pill w-50 text-dark " type="text" value="" id="coupon"
+                      placeholder="Coupon Code" name="couponCode">
+                    <button class="btn_1 border-0" type="submit">Coupon</button>
+                  </form>
                 </div>
               </td>
             </tr>
@@ -74,52 +82,33 @@
               <td></td>
               <td></td>
               <td>
-                <h5>Subtotal</h5>
+                <h5 class="fw-bold">Subtotal</h5>
               </td>
               <td class="d-flex">
-                <h5 >Rs <p id="total">{{totalValue}}</p></h5>
+                <h5>Rs <p >{{totalValue}}</p>
+                </h5>
               </td>
             </tr>
-            <tr class="shipping_area">
-              
-              {{!-- <td>
-                <h5>Shipping</h5>
-              </td> --}}
-              {{!-- <td>
-                <div class="shipping_box">
-                  <ul class="list">
-                    <li>
-                      <a href="#">Flat Rate: $5.00</a>
-                    </li>
-                    <li>
-                      <a href="#">Free Shipping</a>
-                    </li>
-                    <li>
-                      <a href="#">Flat Rate: $10.00</a>
-                    </li>
-                    <li class="active">
-                      <a href="#">Local Delivery: $2.00</a>
-                    </li>
-                  </ul>
-                  <h6>
-                    Calculate Shipping
-                    <i class="fa fa-caret-down" aria-hidden="true"></i>
-                  </h6>
-                  <select class="shipping_select">
-                    <option value="1">Bangladesh</option>
-                    <option value="2">India</option>
-                    <option value="4">Pakistan</option>
-                  </select>
-                  <select class="shipping_select section_bg">
-                    <option value="1">Select a State</option>
-                    <option value="2">Select a State</option>
-                    <option value="4">Select a State</option>
-                  </select>
-                  <input type="text" placeholder="Postcode/Zipcode" />
-                  <a class="btn_1" href="#">Update Details</a>
-                </div>
-              </td> --}}
+
+            <tr>
+              <td></td>
+              <td></td>
+              <td class="fw-bold">Discount</td>
+              <td>
+                <p  id="discount">00</p>
+              </td>
             </tr>
+
+            
+            <tr class="shipping_area">
+              <td></td>
+              <td></td>
+              <td class="fw-bold"><h4>Total</h4></td>
+              <td>
+                <h4 class="fw-bold" id="total">{{totalValue}}</h4>
+              </td>
+            </tr>
+           
           </tbody>
         </table>
         <div class="checkout_btn_inner float-right">
@@ -137,4 +126,12 @@
   .removeButton:hover {
     transform: scale(1.3)
   }
+
+  .coupon input {
+    background-color: rgba(243, 239, 239, 0.864);
+    height: 38px;
+    color: ;
+  }
+
+  @media .coupon input {}
 </style>

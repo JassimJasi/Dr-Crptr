@@ -7,6 +7,8 @@ const productHelpers = require('../helpers/productHelpers');
 const upload = require('../middleware/multer');
 const userHelpers = require('../helpers/userHelpers');
 const { Db } = require('mongodb');
+const dashboardHelpers = require('../helpers/dashboardHelpers')
+const toDoHelper = require('../helpers/toDoListHelper')
 const adminVerification = (req, res, next) => {
   if (req.session.adminLoggedIn) {
     next()
@@ -78,14 +80,21 @@ router.post('/otpAdmin', (req, res) => {
   })
 })
 
-router.get('/dashbord', (req, res) => {
+router.get('/dashbord',adminVerification, async(req, res) => {
   res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-  if (req.session.admin) {
+    let salesDetails =await dashboardHelpers.lastFiveOrder();
+    let totalSales = await dashboardHelpers.totalSales()
+    let dailyTotalSales = await dashboardHelpers.dailyTotalSales();
+    let arrayLength = dailyTotalSales.length - 1;
+    let dailySales = dailyTotalSales[arrayLength]
+    console.log('chart',dailySales);    
+    let salesDate = await dashboardHelpers.salesDate();
+    let statusCode = await dashboardHelpers.statusCode();
+    let totalStatusCounttext = await dashboardHelpers.totalStatusCounttext()
+    let totalStatusCount = await dashboardHelpers.totalStatusCount();
+    let todolist = await toDoHelper.getToDolist();
     let admin = req.session.admin;
-    res.render('admin/adminHome', { admin, layout: "adminLayout" });
-  } else {
-    res.redirect('/admin')
-  }
+    res.render('admin/adminHome', { admin, layout: "adminLayout",salesDetails,todolist,totalSales,dailyTotalSales,salesDate,statusCode,totalStatusCount,totalStatusCounttext,dailySales });
 });
 
 //view-users
@@ -287,7 +296,8 @@ router.get('/adminOrder',(req,res) => {
     res.render('admin/adminOrder',{layout: "adminLayout",orders})
   })
 })
-router.get('/ShippingConfirm/:id',(req,res) => {
+router.get('/shippingConfirm/:id',(req,res) => {
+  console.log("shippingConfirm",req.params.id);
   adminHelper.confirmShipping(req.params.id).then((response) => {
     console.log("shipp",response);
     res.json(response)
@@ -328,9 +338,19 @@ router.post('/addCoupon',(req,res) => {
     res.render('admin/addCoupon',{layout: "adminLayout"})
   })
 })
+router.post('/coupon',(req,res) => {
+  console.log(req.body);
+})
 //chart
 router.get('/chart',(req,res) => {
   res.render('admin/chart',{layout: "adminLayout"})
+})
+
+//to Do List
+router.post('/toDoList',(req,res) => {
+  toDoHelper.adDoList(req.body).then(() => {
+    res.redirect('back')
+  })
 })
 
 

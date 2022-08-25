@@ -1,3 +1,4 @@
+
 function addToCart(prodId) {
   $.ajax({
     url: '/add-To-Cart/' + prodId,
@@ -222,4 +223,34 @@ function verifyPayment(payment, order) {
     }
   })
 }
+//coupon
+$('#couponForm').submit((e) => {
+  e.preventDefault();
+  $.ajax({
+    url: '/apply-coupon',
+    method:'post',
+    data:$('#couponForm').serialize(),
+    success:(resource) => {
+      if(resource.status) {
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Coupon Success',
+          showConfirmButton: false,
+          timer: 2000
+        })
+        document.getElementById('discount').innerHTML = resource.discountPrice
+        document.getElementById('total').innerHTML = resource.discountTotal
+      }else{
+        Swal.fire({
+          position: 'center',
+          icon: 'Failed',
+          title: 'Invalid coupon!',
+          showConfirmButton: false,
+          timer: 2000
+        })
+      }
+    }
+  })
+})
 

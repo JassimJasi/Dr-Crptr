@@ -85,17 +85,19 @@ module.exports = {
             resolve(orders)
         })
     },
-    confirmShipping: (order_id) => {
+    confirmShipping: (orderId) => {
         return new Promise((resolve,reject) => {
-            console.log("shipp user-help",order_id);
+            console.log("shipp user-help",orderId);
             db.get().collection(collection.ORDER_COLLECTION)
-                .updateOne({ _id: objectId(order_id) }, {
+                .updateOne({ _id: objectId(orderId) }, {
                     $set: {
-                        status: Shipped,                        
+                        status: "Shipped",                        
                     }
                 }).then((response) => {
-                    console.log("shipp user-help",response);
-                    resolve(response)
+                    db.get().collection(collection.ORDER_COLLECTION).findOne({ _id: objectId(orderId) }).then((result => {
+
+                        resolve(result.status)
+                    }))
                 })
         })
     },
@@ -108,6 +110,7 @@ module.exports = {
     },
     addCoupon : (couponDetails) => {
         couponDetails.usedUserDetails = [null]
+        couponDetails.couponCode = couponDetails.couponCode.toUpperCase() 
         return new Promise((resolve,reject) => {
             db.get().collection(collection.COUPON_COLLECTION).insertOne(couponDetails).then(() => {
                 console.log("cou",couponDetails);
@@ -120,5 +123,6 @@ module.exports = {
           let couponDetails = await  db.get().collection(collection.COUPON_COLLECTION).find().toArray()
                 resolve(couponDetails);
         })
-    }
+    },
+    
 }

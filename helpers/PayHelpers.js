@@ -40,7 +40,7 @@ module.exports = {
             }
         })
     },
-    changePaymentStatus: (orderId) => {
+    changePaymentStatus: (orderId,userId) => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.ORDER_COLLECTION)
                 .updateOne({ _id: objectId(orderId) },
@@ -48,8 +48,12 @@ module.exports = {
                         $set: {
                             status: 'placed'
                         }
-                    }).then(() => {
+                    }).then((response) => {
                         resolve()
+                        if (response.acknowledged == true) {
+                            console.log("very",userId);
+                            db.get().collection(collection.CART_COLLECTION).deleteOne({ user: objectId(userId) })
+                        }
                     })
         })
     },

@@ -7,7 +7,8 @@ const verify = require('../helpers/verify');
 const passport = require('passport');
 require('../helpers/googleAuth')(passport);
 const productHelpers = require('../helpers/productHelpers');
-const payHelper = require('../helpers/PayHelpers')
+const payHelper = require('../helpers/PayHelpers');
+const offerHelper = require('../helpers/offerHelpers')
 
 // Not login
 const verifyLogin = (req, res, next) => {
@@ -156,7 +157,7 @@ router.get('/userProduct/:cate', async (req, res) => {
   let user = req.session.user;
   let category = await productHelpers.viewCategory()
   if (req.params) {
-    console.log(req.params);
+    // console.log(req.params);
     productHelpers.viewCateProducts(req.params.cate).then((products) => {
       let sortProduct = products.sort(function (a, b) { return a.product.price - b.product.price })
       res.render('user/userProduct', { user, category, sortProduct })
@@ -266,37 +267,62 @@ router.post('/remove-Wishlist-product', (req, res) => {
     res.json(response)
   })
 })
-
+//Coupon
+router.post('/apply-coupon', verifyLogin, (req, res) => {
+  console.log("userjs", req.body, "sxxsx", req.session.user._id);
+  offerHelper.applyCoupon(req.body, req.session.user._id).then((response) => {
+    if (response.status) {
+      req.session.coupon = response.coupon;
+      req.session.discount = response.discountPrice
+      console.log("user",req.session.coupon);
+    }
+    console.log('user coup', response);
+    res.json(response)
+  })
+})
 
 //checkout
 router.get('/checkout', verifyLogin, async (req, res) => {
+  let DiscountTotal = 00
+  let address = await userHelper.getUserAddress(req.session.user._id)
   let total = await userHelper.getTotalAmount(req.session.user._id)
+  let coupon = req.session.coupon;
+  DiscountTotal = req.session.discount;
+  res.render("user/checkout", { total, user: req.session.user, address, DiscountTotal, coupon })
 
-  res.render("user/checkout", { total, user: req.session.user })
 })
 //place order
 router.post('/place-order', verifyLogin, async (req, res) => {
+  let totalPrice = 0;
   let products = await userHelper.getCartProductList(req.body.userId);
-  let totalPrice = await userHelper.getTotalAmount(req.body.userId)
+  if (req.session.discount) {
+    totalPrice = req.session.discount;
+  } else {
+    totalPrice = await userHelper.getTotalAmount(req.body.userId);
+  }
+  userHelper.userAddress(req.body).then(() => {
+    console.log(req.session.coupon);
+    userHelper.placeOrder(req.body, products, totalPrice, req.session.coupon).then((orderId) => {
+      // console.log("place req body",req.body['payment-method']);
+      if (req.body['payment-method'] === 'COD') {
 
-  userHelper.placeOrder(req.body, products, totalPrice).then((orderId) => {
-    // console.log("place req body",req.body['payment-method']);
-    if (req.body['payment-method'] === 'COD') {
+        res.json({ codSuccess: true })
+      } else {
 
-      res.json({ codSuccess: true })
-    } else {
-
-      payHelper.generateRazorpay(orderId, totalPrice).then((response) => {
-        res.json(response)
-      })
-    }
+        payHelper.generateRazorpay(orderId, totalPrice).then((response) => {
+          res.json(response)
+        })
+      }
+    })
+    req.session.discount = null;
+    req.session.coupon = null;
   })
-
 })
-router.post('/verify-payment', (req, res) => {
+router.post('/verify-payment', verifyLogin, (req, res) => {
   console.log(req.body);
+
   payHelper.verifyPayment(req.body).then(() => {
-    payHelper.changePaymentStatus(req.body['order[receipt]']).then(() => {
+    payHelper.changePaymentStatus(req.body['order[receipt]'], req.session.user._id).then(() => {
       console.log('payment successfull');
       res.json({ status: true })
     })
@@ -309,13 +335,13 @@ router.post('/verify-payment', (req, res) => {
 //order
 router.get('/order', verifyLogin, async (req, res) => {
   let orders = await payHelper.getOrderDetails(req.session.user._id)
-  console.log('order', orders);
+ // console.log('order', orders);
   res.render('user/order', { orders })
 
 })
 router.get('/view-order-products/:id', verifyLogin, async (req, res) => {
   let products = await userHelper.getOrderProducts(req.params.id)
-  console.log("view-ord", products);
+  //console.log("view-ord", products);
   res.render('user/viewOrderProducts', { products })
 })
 

@@ -46,69 +46,58 @@
         </div> --}}
         <div class="billing_details">
             <div class="row">
-                <form class="row contact_form"  method="post" id="checkout-form" >
+                <form class="row contact_form"  method="post" id="checkout-form">
                     <div class="col-lg-8">
                         <h3>Billing Details</h3>
                         <div class="col-md-6 form-group p_star">
                             <input type="text" name="userId" value="{{user._id}}" hidden>
-                            <input type="text" class="form-control" id="first" name="name" placeholder="First name" />
+                            <input type="text" class="form-control" id="first" name="name" value="{{address.name.[0]}}" placeholder="First name" />
                             {{!-- <span class="placeholder" data-placeholder="First name"></span> --}}
                         </div>
                         <div class="col-md-6 form-group p_star">
-                            <input type="text" class="form-control" id="last" name="name" placeholder="Last name"/>
-                            
+                            <input type="text" class="form-control" id="last" name="name" value="{{address.name.[1]}}" placeholder="Last name" />
+
                         </div>
-                        
+
                         <div class="col-md-6 form-group p_star">
-                            <input type="text" class="form-control" id="number" name="number" placeholder="Phone number"/>
-                            
+                            <input type="text" class="form-control" id="number" name="number" value="{{address.addNumber}}"
+                                placeholder="Phone number" />
+
                         </div>
                         <div class="col-md-6 form-group p_star">
-                            <input type="text" class="form-control" id="email" name="email" placeholder="Email Address"/>
-                            
+                            <input type="text" class="form-control" id="email" name="email" value="{{address.addEmail}}"
+                                placeholder="Email Address" />
+
                         </div>
                         <div class="col-md-12 form-group p_star">
-                            <select class="country_select">
-                                <option value="1">India</option>
-                                <option value="2">Dubai</option>
+                            <select name="country" value="{{address.country}}" class="country_select">
+                                <option value="India">India</option>
+                                <option value="2" disabled>Currently available Only in India</option>
                             </select>
                         </div>
                         <div class="col-md-12 form-group p_star">
-                            <input type="text" class="form-control" id="add1" name="address" placeholder="Address"/>
-                            
+                            <input type="text" class="form-control" id="add1" name="address" value="{{address.address}}" placeholder="Address" />
+
                         </div>
-                        
+
                         <div class="col-md-12 form-group p_star">
-                            <input type="text" class="form-control" id="city" name="city" placeholder="Town/City"/>
-                            
+                            <input type="text" class="form-control" id="city" name="city" value="{{address.city}}" placeholder="Town/City" />
+
                         </div>
-                        <div class="col-md-12 form-group p_star">
-                            <select class="country_select">
-                                <option value="1">Palakkad</option>
-                                <option value="2">calicut</option>
-                                <option value="4">Malappuram</option>
+                        {{!-- <div class="col-md-12 form-group p_star">
+                            <select name="" class="country_select">
+                                <option >Palakkad</option>
+                                <option >calicut</option>
+                                <option >Malappuram</option>
                             </select>
-                        </div>
+                        </div> --}}
                         <div class="col-md-12 form-group">
-                            <input type="text" class="form-control" id="zip" name="zip" placeholder="Postcode/ZIP" />
+                            <input type="text" class="form-control" id="zip" name="zip"value="{{address.zip}}" placeholder="Postcode/ZIP" />
                         </div>
-                        {{!-- <div class="col-md-12 form-group">
-                            <div class="creat_account">
-                                <input type="checkbox" id="f-option2" name="selector" />
-                                <label for="f-option2">Create an account?</label>
-                            </div>
-                        </div> --}}
-                        {{!-- <div class="col-md-12 form-group">
-                            <div class="creat_account">
-                                <h3>Shipping Details</h3>
-                                <input type="checkbox" id="f-option3" name="selector" />
-                                <label for="f-option3">Ship to a different address?</label>
-                            </div>
-                            <textarea class="form-control" name="message" id="message" rows="1"
-                                placeholder="Order Notes"></textarea>
-                        </div> --}}
+                        <button class="btn_3" type="submit">Conform</button>
 
                     </div>
+               
                     <div class="col-lg-4">
                         <div class="order_box">
                             <h2>Your Order</h2>
@@ -119,16 +108,29 @@
                                         <span>₹: {{total}}</span>
                                     </a>
                                 </li>
+                                 <li>
+                                    <a href="#">Discount
+                                        <span>₹: {{DiscountTotal}}</span>
+                                    </a>
+                                </li>
                                 <li>
                                     <a href="#">Shipping
                                         <span>: ₹ <del>50.00</del>Its Free</span>
                                     </a>
                                 </li>
+                                {{#if coupon}}
+                                <li>
+                                    <a href="#">Total
+                                        <span>₹: {{DiscountTotal}}</span>
+                                    </a>
+                                </li>
+                                {{else}}
                                 <li>
                                     <a href="#">Total
                                         <span>₹: {{total}}</span>
                                     </a>
                                 </li>
+                                {{/if}}
                             </ul>
                             {{!-- <div class="payment_item">
                                 <div class="radion_btn">
@@ -147,25 +149,13 @@
                                     <input type="radio" name="payment-method" value="COD" id="" checked> COD
                                 </label>
                                 <div class=" d-flex justify-content-between ">
-                                <label class="radio-inline  ">
-                                    <input type="radio" name="payment-method" value="ONLINE" id="" checked> Online payment
-                                </label>
-                                     <img src="img/product/single-product/card.jpg" alt="" />
-                                </div>
-                                {{!-- <div class="radion_btn mt-4 mb-4 ">
-                                    <label class=" radio-inline ">
-                                        <input type="radio"  name="selector" value="COD"  />COD
-                                        <img src="img/product/single-product/card.jpg" alt="" />
+                                    <label class="radio-inline  ">
+                                        <input type="radio" name="payment-method" value="ONLINE" id="" checked> Online
+                                        payment
                                     </label>
-                                    <div class="check"></div>
+                                    <img src="img/product/single-product/card.jpg" alt="" />
                                 </div>
-                                <div class="radion_btn mt-4 mb-4">
-                                     <label  class=" radio-inline ">
-                                        <input type="radio"  name="selector" value="ONLINE PAYMENT"  />ONLINE PAYMENT
-                                        <img src="img/product/single-product/card.jpg" alt="" />
-                                    </label>
-                                    <div class="check"></div>
-                                </div> --}}
+
 
                             </div>
                             <div class="creat_account">
