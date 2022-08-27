@@ -7,10 +7,13 @@ const productHelpers = require('../helpers/productHelpers');
 const upload = require('../middleware/multer');
 const userHelpers = require('../helpers/userHelpers');
 const { Db } = require('mongodb');
-const dashboardHelpers = require('../helpers/dashboardHelpers')
-const toDoHelper = require('../helpers/toDoListHelper')
+const dashboardHelpers = require('../helpers/dashboardHelpers');
+const toDoHelper = require('../helpers/toDoListHelper');
+const orderHelper = require('../helpers/orderHelper');
+
 const adminVerification = (req, res, next) => {
   if (req.session.adminLoggedIn) {
+
     next()
   } else {
     res.redirect('/admin')
@@ -80,36 +83,36 @@ router.post('/otpAdmin', (req, res) => {
   })
 })
 
-router.get('/dashbord',adminVerification, async(req, res) => {
+router.get('/dashbord', adminVerification, async (req, res) => {
   res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-    let salesDetails =await dashboardHelpers.lastFiveOrder();
-    let totalSales = await dashboardHelpers.totalSales()
-    let dailyTotalSales = await dashboardHelpers.dailyTotalSales();
-    let arrayLength = dailyTotalSales.length - 1;
-    let dailySales = dailyTotalSales[arrayLength]
-    console.log('chart',dailySales);    
-    let salesDate = await dashboardHelpers.salesDate();
-    let statusCode = await dashboardHelpers.statusCode();
-    let totalStatusCounttext = await dashboardHelpers.totalStatusCounttext()
-    let totalStatusCount = await dashboardHelpers.totalStatusCount();
-    let todolist = await toDoHelper.getToDolist();
-    let admin = req.session.admin;
-    res.render('admin/adminHome', { admin, layout: "adminLayout",salesDetails,todolist,totalSales,dailyTotalSales,salesDate,statusCode,totalStatusCount,totalStatusCounttext,dailySales });
+  let salesDetails = await dashboardHelpers.lastFiveOrder();
+  let totalSales = await dashboardHelpers.totalSales()
+  let dailyTotalSales = await dashboardHelpers.dailyTotalSales();
+  let arrayLength = dailyTotalSales.length - 1;
+  let dailySales = dailyTotalSales[arrayLength]
+  //console.log('chart',dailySales);    
+  let salesDate = await dashboardHelpers.salesDate();
+  let statusCode = await dashboardHelpers.statusCode();
+  let totalStatusCounttext = await dashboardHelpers.totalStatusCounttext()
+  let totalStatusCount = await dashboardHelpers.totalStatusCount();
+  let todolist = await toDoHelper.getToDolist();
+  let admin = req.session.admin;
+  res.render('admin/adminHome', { admin, layout: "adminLayout", salesDetails, todolist, totalSales, dailyTotalSales, salesDate, statusCode, totalStatusCount, totalStatusCounttext, dailySales });
 });
 
 //view-users
-router.get('/view-user',adminVerification, (req, res) => {
-  
-    let admin = req.session.admin;
-    adminHelper.viewUser().then((userData) => {
-      console.log("view user", userData);
-      res.render('admin/viewUser', { admin, userData, layout: "adminLayout" });
-    })
-  
+router.get('/view-user', adminVerification, (req, res) => {
+
+  let admin = req.session.admin;
+  adminHelper.viewUser().then((userData) => {
+    // console.log("view user", userData);
+    res.render('admin/viewUser', { admin, userData, layout: "adminLayout" });
+  })
+
 })
 
 //delete user 
-router.get('/userDel/:id', (req, res) => {
+router.get('/userblock/:id', (req, res) => {
   let userId = req.params.id
   adminHelper.delUser(userId).then(() => {
     res.redirect('/admin/view-user')
@@ -134,17 +137,14 @@ router.post('/edit-user/:id', (req, res) => {
 //product
 //add product
 
-router.get('/add-product', (req, res) => {
+router.get('/add-product', adminVerification, (req, res) => {
   //res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-  if (req.session.admin) {
-    let admin = req.session.admin;
-    productHelpers.viewCategory().then((category) => {
-      console.log("addPro Cate", category);
-      res.render('admin/addProduct', { admin, category, layout: "adminLayout" })
-    })
-  } else {
-    res.redirect('/admin')
-  }
+
+  let admin = req.session.admin;
+  productHelpers.viewCategory().then((category) => {
+    //console.log("addPro Cate", category);
+    res.render('admin/addProduct', { admin, category, layout: "adminLayout" })
+  })
 })
 
 router.post('/addProduct', upload.array('image', 4), (req, res) => {
@@ -161,23 +161,20 @@ router.post('/addProduct', upload.array('image', 4), (req, res) => {
   let year = dateObj.getUTCFullYear();
   let day = dateObj.getUTCDate();
   req.body.date = day + "/" + month + "/" + year;
-  console.log(req.body);
+  //console.log(req.body);
   productHelpers.addProduct(req.body, image).then((response) => {
     res.redirect('add-product')
   })
 })
 
 //view-products
-router.get('/view-product', (req, res) => {
-  if (req.session.admin) {
-    let admin = req.session.admin;
-    productHelpers.viewProducts().then((products) => {
+router.get('/view-product', adminVerification, (req, res) => {
 
-      res.render('admin/adminViewProduct', { admin, layout: "adminLayout", products });
-    })
-  } else {
-    res.redirect('/admin')
-  }
+  let admin = req.session.admin;
+  productHelpers.viewProducts().then((products) => {
+
+    res.render('admin/adminViewProduct', { admin, layout: "adminLayout", products });
+  })
 })
 //delete Product
 router.get('/productDel/:id', (req, res) => {
@@ -195,7 +192,7 @@ router.get('/productEdit/:id', async (req, res) => {
   let category = productHelpers.viewCategory().then((category) => {
     let proErr = req.session.editProductErr
     let proSucc = req.session.successMess
-    res.render('admin/editProduct', { category,proSucc, layout: "adminLayout", products, proErr })
+    res.render('admin/editProduct', { category, proSucc, layout: "adminLayout", products, proErr })
     req.session.editProductErr = false
     req.session.successMess = false
   })
@@ -208,7 +205,7 @@ router.post('/productEdit/:id', upload.array('image', 4), (req, res) => {
   image = files.map((value) => {
     return value.filename;
   })
-  console.log(req.params.id);
+  //console.log(req.params.id);
   productHelpers.editProduct(req.params.id, req.body, image).then((success) => {
     req.session.successMess = success
     res.redirect('back')
@@ -220,30 +217,24 @@ router.post('/productEdit/:id', upload.array('image', 4), (req, res) => {
 
 //CategoryManagement
 
-router.get('/viewCategory', (req, res) => {
-  if (req.session.admin) {
-    let admin = req.session.admin;
-    productHelpers.viewCategory().then((category) => {
-      console.log("Category", category);
-      res.render('admin/viewCategoryManage', { category, admin, layout: "adminLayout" })
-    })
-  } else {
-    res.redirect('/admin')
-  }
+router.get('/viewCategory', adminVerification, (req, res) => {
+
+  let admin = req.session.admin;
+  productHelpers.viewCategory().then((category) => {
+    //console.log("Category", category);
+    res.render('admin/viewCategoryManage', { category, admin, layout: "adminLayout" })
+  })
 })
 
 //addCategoryManagement
-router.get('/addCategory', (req, res) => {
-  if (req.session.admin) {
-    let admin = req.session.admin;
-    let errMes = req.session.addCategoryErr
+router.get('/addCategory', adminVerification, (req, res) => {
 
-    res.render('admin/addCategoryManage', { admin, errMes, layout: "adminLayout" })
-    req.session.addCategoryErr = false
+  let admin = req.session.admin;
+  let errMes = req.session.addCategoryErr
 
-  } else {
-    res.redirect('viewCategory')
-  }
+  res.render('admin/addCategoryManage', { admin, errMes, layout: "adminLayout" })
+  req.session.addCategoryErr = false
+
 });
 router.post('/addCategory', (req, res) => {
   //console.log("Category", req.body);
@@ -274,7 +265,7 @@ router.get('/categoryEdit/:id', async (req, res) => {
   let err = req.session.editCateErr
   let cateId = req.params.id
   let admin = req.session.admin;
-   productHelpers.getCateById(cateId).then((category) => {
+  productHelpers.getCateById(cateId).then((category) => {
     //console.log(category);
     res.render('admin/editCategory', { admin, err, layout: "adminLayout", category })
   }).catch((errmass) => {
@@ -290,31 +281,40 @@ router.post('/editCategory/:id', (req, res) => {
     res.redirect('back')
   })
 })
-
-router.get('/adminOrder',(req,res) => {
+//order
+router.get('/adminOrder', adminVerification, (req, res) => {
+  let admin = req.session.admin;
   adminHelper.getAllOrderDetails().then((orders) => {
-    res.render('admin/adminOrder',{layout: "adminLayout",orders})
+    res.render('admin/adminOrder', { admin, layout: "adminLayout", orders })
   })
 })
-router.get('/shippingConfirm/:id',(req,res) => {
-  console.log("shippingConfirm",req.params.id);
+router.get('/shippingConfirm/:id', (req, res) => {
+  //console.log("shippingConfirm",req.params.id);
   adminHelper.confirmShipping(req.params.id).then((response) => {
-    console.log("shipp",response);
+    //console.log("shipp",response);
+    res.json(response)
+  })
+})
+router.get('/cancelOrder/:id', (req, res) => {
+  //console.log("ord",req.params.id);
+  orderHelper.cancelOrder(req.params.id).then((response) => {
     res.json(response)
   })
 })
 
 //Banner
-router.get('/banner',(req,res) => {
-  res.render('admin/viewBanner',{layout: "adminLayout"})
+router.get('/banner', adminVerification, (req, res) => {
+  let admin = req.session.admin;
+  res.render('admin/viewBanner', { admin, layout: "adminLayout" })
 })
-router.get('/addBanner',(req,res) => {
-  res.render('admin/addBanner',{layout: "adminLayout"})
+router.get('/addBanner', adminVerification, (req, res) => {
+  let admin = req.session.admin;
+  res.render('admin/addBanner', { admin, layout: "adminLayout" })
 })
-router.post('/addBanner', upload.single('Image'),(req,res) => {
+router.post('/addBanner', upload.single('Image'), (req, res) => {
   let image = req.file.filename
   console.log(req.file);
-  adminHelper.addBanner(req.body,image).then(() => {
+  adminHelper.addBanner(req.body, image).then(() => {
     res.redirect('/admin/addBanner')
     // if (req.files.Image) {
     //   let image = req.files.Image
@@ -324,30 +324,42 @@ router.post('/addBanner', upload.single('Image'),(req,res) => {
 })
 
 //Coupon Management
-router.get('/couponManagement',(req,res) => {
+router.get('/couponManagement', adminVerification, (req, res) => {
+  let admin = req.session.admin;
   adminHelper.viewCoupon().then((couponDetails) => {
-    res.render('admin/viewCoupon',{layout: "adminLayout",couponDetails})
+    res.render('admin/viewCoupon', { admin, layout: "adminLayout", couponDetails })
   })
 })
-router.get('/addCoupon',(req,res) => {
-    res.render('admin/addCoupon',{layout: "adminLayout"})
+router.get('/addCoupon', adminVerification, (req, res) => {
+  let admin = req.session.admin;
+  res.render('admin/addCoupon', { admin, layout: "adminLayout" })
 })
 
-router.post('/addCoupon',(req,res) => {
+router.post('/addCoupon', (req, res) => {
   adminHelper.addCoupon(req.body).then(() => {
-    res.render('admin/addCoupon',{layout: "adminLayout"})
+    res.render('admin/addCoupon', { layout: "adminLayout" })
   })
 })
-router.post('/coupon',(req,res) => {
-  console.log(req.body);
+// router.post('/coupon',(req,res) => {
+//   //console.log(req.body);
+// })
+router.get('/couponDel/:id', (req, res) => {
+  adminHelper.deleteCoupon(req.params.id).then((response) => {
+    res.json(response)
+  }).catch((err) => {
+    console.log(err);
+  })
 })
+
+
 //chart
-router.get('/chart',(req,res) => {
-  res.render('admin/chart',{layout: "adminLayout"})
+router.get('/chart', adminVerification, (req, res) => {
+  let admin = req.session.admin;
+  res.render('admin/chart', { admin, layout: "adminLayout" })
 })
 
 //to Do List
-router.post('/toDoList',(req,res) => {
+router.post('/toDoList', (req, res) => {
   toDoHelper.adDoList(req.body).then(() => {
     res.redirect('back')
   })

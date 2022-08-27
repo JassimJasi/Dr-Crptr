@@ -48,12 +48,15 @@ module.exports = {
             resolve(userData);
         })
     },
-    delUser : (deleteData) => {
+    delUser : (userId) => {
         return new Promise((resolve, reject) => {
             //console.log(deleteData);
             //console.log(objectId(deleteData));
-            db.get().collection(collection.USER_COLLECTION).deleteOne({ _id: objectId(deleteData) }).then((response) => {
-
+            db.get().collection(collection.USER_COLLECTION).updateOne({ _id: objectId(userId) },{
+                $set:{
+                    logingStatus:false
+                }
+            }).then((response) => {
                 resolve(response)
             })
         })
@@ -73,9 +76,10 @@ module.exports = {
                         displayName: editUser.displayName,
                         Email: editUser.Email,
                         Phone: editUser.Phone
+
                     }
                 }).then((response) => {
-                    resolve()
+                    resolve({ediStatus : true})
                 })
         })
     },
@@ -124,5 +128,13 @@ module.exports = {
                 resolve(couponDetails);
         })
     },
-    
+    deleteCoupon : (couponId) => {
+        return new Promise(async(resolve,reject) => {
+            db.get().collection(collection.COUPON_COLLECTION).deleteOne({_id:objectId(couponId)}).then((response)=>{
+                resolve({status:true});
+            }).catch(() => {
+                reject();
+            })
+        })
+    }
 }

@@ -1,0 +1,197 @@
+<section class="cart_area padding_top sectionbody">
+    <div class="back-container">
+        <div class="top">
+            <p>Address</p>
+            <a href="/myAccount"><svg fill="#000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+                    <path d="M0 0h24v24H0z" fill="none" />
+                </svg></a>
+        </div>
+
+        <form class="form-group " action="" id="editUserAccount">
+            <div class="front-container p-5 mb-5">
+                
+                <div class="username">
+                    <label for="username">First name</label>
+                    <input type="text"  id="username" name="name" value="{{address.name.[0]}}" placeholder="First name" />
+                </div>
+
+                <div class="first-name">
+                    <label for="first-name">First Name</label>
+                    <input type="text"  id="first-name" name="name" value="{{address.name.[1]}}" placeholder="Last name" />
+                </div>
+
+                <div class="last-name">
+                    <label for="last-name">Phone</label>
+                    <input type="number"  id="last-name" name="number" value="{{address.addNumber}}" />
+                </div>
+
+                <div class="email">
+                    <label for="email">Email</label>
+                    <input type="email"  id="email" name="email" value="{{address.addEmail}}" />
+                </div>
+                 <div class="email">
+                    <label for="email">Email</label>
+                    <input type="email"  id="email" name="city" value="{{address.city}}" placeholder="Town/City" />
+                </div>
+                 <div class="email">
+                    <label for="email">Email</label>
+                    <input type="email"  id="email" name="zip"value="{{address.zip}}" placeholder="Postcode/ZIP" />
+                </div>
+                
+            </div>
+
+            {{!-- <div class="bottom">
+                <button type="submit" class="submitBtn">Save</button>
+
+            </div> --}}
+        </form>
+    </div>
+</section>
+
+<style>
+    @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
+
+    :root {
+        --gray-background: #2f2f2f;
+        --yellow-background: #ffc8c8;
+        --light-gray: #d1cfce;
+        --dark-gray: #818184;
+    }
+
+    * {
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+    }
+
+    .sectionbody {
+        margin-top: -80px;
+        background: #ffc8c8;
+        font-family: "Roboto", sans-serif;
+
+        display: flex;
+
+        overflow: hidden;
+    }
+
+    a {
+        font-size: 1.2rem;
+        text-decoration: none;
+        color: #000;
+        opacity: 0.6;
+    }
+
+    a:hover {
+        opacity: 1;
+    }
+
+    label {
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        font-weight: bold;
+        color: var(--light-gray);
+    }
+
+    input,
+    textarea {
+        outline: none;
+        border-style: none;
+        border-bottom: 1px solid var(--light-gray);
+        width: 100%;
+        padding: 10px 0;
+        margin-bottom: 20px;
+        resize: vertical;
+    }
+
+    .back-container {
+        background: var(--yellow-background);
+        max-width: 500px;
+        width: 100%;
+        margin: auto;
+        padding: 0 60px;
+    }
+
+    .top {
+        display: flex;
+        justify-content: space-between;
+        padding-top: 10px;
+        margin-bottom: 1px;
+    }
+
+    .top p {
+        font-size: 1.5rem;
+    }
+
+    .front-container {
+        background: #fff;
+        box-shadow: 0 5px 15px 2px rgba(0, 0, 0, 0.3);
+        width: 500px;
+        position: relative;
+        margin: auto;
+    }
+
+    .front-container img {
+        border-radius: 50%;
+        width: 70px;
+        position: absolute;
+        top: -35px;
+        left: 40px;
+    }
+
+    .front-container .form-group {
+        padding: 65px 40px 45px;
+        max-width: 100%;
+        display: grid;
+        grid-template-areas:
+            "username username"
+            "first-name last-name"
+            "email email"
+            "bio bio";
+    }
+
+    .username {
+        grid-area: username;
+    }
+
+    .first-name {
+        grid-area: first-name;
+    }
+
+    .last-name {
+        grid-area: last-name;
+    }
+
+    .email {
+        grid-area: email;
+    }
+
+    .bio {
+        grid-area: bio;
+    }
+
+    ::placeholder {
+        color: var(--dark-gray);
+        font-size: 0.9rem;
+        font-weight: 500;
+        opacity: 0.7;
+    }
+
+    .bottom {
+        padding-bottom: 30px;
+        margin-top: 30px;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .bottom a {
+        margin-left: 20px;
+    }
+
+    .submitBtn {
+        padding: 0;
+        border: none;
+        background: none;
+    }
+</style>

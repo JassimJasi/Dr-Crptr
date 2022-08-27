@@ -1,15 +1,16 @@
- <!-- Spinner Start -->
-        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-        </div>
-        <!-- Spinner End -->
+<!-- Spinner Start -->
+<div id="spinner"
+    class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+<!-- Spinner End -->
 
 <!-- Sidebar Start -->
-<div class="sidebar pe-4 pb-3" style="padding-top: 60px ;" >
-    <nav class="navbar bg-light navbar-light" >
-       
+<div class="sidebar pe-4 pb-3" style="padding-top: 60px ;">
+    <nav class="navbar bg-light navbar-light">
+
         <div class="d-flex align-items-center ms-4 mb-4">
             <div class="position-relative">
                 {{!-- <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;"> --}}
@@ -24,27 +25,35 @@
             </div>
             {{/if}}
         </div>
-        <div class="navbar-nav w-100">
-            <a href="/admin/dashbord" class="nav-item nav-link active"><i
+        <div id="myDIV " class="navbar-nav w-100">
+            <a href="/admin/dashbord" id="aTag" class="aTag nav-item nav-link"><i
                     class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
             <div class="nav-item dropdown">
-                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i
-                        class="fa fa-laptop me-2"></i>User Details</a>
+                {{!-- <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i
+                        class="fa fa-laptop me-2"></i></a> --}}
                 <div class="dropdown-menu bg-transparent border-0">
-                    <a href="/admin/view-user" class="dropdown-item">View User</a>
+                    {{!-- <a href="" class="dropdown-item"></a> --}}
                     {{!-- <a href="typography.html" class="dropdown-item">Typography</a>
                     <a href="element.html" class="dropdown-item">Other Elements</a> --}}
                 </div>
             </div>
-            <a href="/admin/add-product" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Add Products</a>
-            <a href="/admin/view-product" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>View Products</a>
-            <a href="/admin/viewCategory" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Category Manage</a>
+            <a href="/admin/view-user" id="aTag" class="aTag nav-item nav-link"><i class="fa fa-th me-2"></i>View
+                User</a>
+            <a href="/admin/add-product" id="aTag" class="aTag nav-item nav-link"><i class="fa fa-th me-2"></i>Add
+                Products</a>
+            <a href="/admin/view-product" id="aTag" class="aTag nav-item nav-link"><i
+                    class="fa fa-keyboard me-2"></i>View Products</a>
+            <a href="/admin/viewCategory" id="aTag" class="aTag nav-item nav-link"><i
+                    class="fa fa-table me-2"></i>Category Manage</a>
 
-            <a href="/admin/adminOrder" class="nav-link dropdown-toggle"><i class="far fa-file-alt me-2"></i>Orders</a>
-            <a href="/admin/banner" class="nav-link dropdown-toggle"><i class="far fa-file-alt me-2"></i>Banner</a>
-            <a href="/admin/couponManagement" class="nav-link dropdown-toggle"><i class="fas fa-tag me-2"></i>Coupon
+            <a href="/admin/adminOrder" id="aTag" class="aTag nav-link dropdown-toggle"><i
+                    class="far fa-file-alt me-2"></i>Orders</a>
+            <a href="/admin/banner" id="aTag" class="aTag nav-link dropdown-toggle"><i
+                    class="far fa-file-alt me-2"></i>Banner</a>
+            <a href="/admin/couponManagement" id="aTag" class="aTag nav-link dropdown-toggle"><i
+                    class="fas fa-tag me-2"></i>Coupon
             </a>
-            <a href="/admin/chart" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Charts</a>
+            {{!-- <a href="/admin/chart" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Charts</a> --}}
 
         </div>
     </nav>
@@ -64,9 +73,9 @@
             <input class="form-control border-0" type="search" placeholder="Search">
         </form>
         <div class="navbar-nav align-items-center ms-auto">
-           
+
             <div class="nav-item dropdown">
-               
+
                 <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
                     <a href="#" class="dropdown-item">
                         <h6 class="fw-normal mb-0">Profile updated</h6>
@@ -104,5 +113,20 @@
 </div>
 <!-- Navbar End -->
 <style>
-   
+
 </style>
+<script>
+    $(".aTag").click(function () {
+
+        // Select all list items
+        var listItems = $(".aTag");
+
+        // Remove 'active' tag for all list items
+        for (let i = 0; i < listItems.length; i++) {
+            listItems[i].classList.remove("active");
+        }
+
+        // Add 'active' tag for currently selected item
+        this.classList.add("active");
+    });
+</script>

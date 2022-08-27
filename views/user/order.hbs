@@ -44,6 +44,9 @@
                                     <a href="/view-order-products/{{this._id}}" class="btn btn-primary">View
                                         Products</a>
                                 </td>
+                                <td class="text-center">
+                                    <button onclick="cancelOrder('{{this._id}}')" class="btn btn-primary">Cancle</button>
+                                </td>
                                 {{!-- <td>{{status}}</td> --}}
                                 {{!-- <td><span class="label label-success"> Available </span></td> --}}
                                 {{!-- <td>{{this.date}}</td> --}}
@@ -81,7 +84,6 @@
     }
 </style>
 <script>
-
 
 
 

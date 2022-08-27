@@ -8,13 +8,19 @@ const invNum = require('invoice-number')
 module.exports = {
     doSignup: (userdata) => {
         return new Promise(async (resolve, reject) => {
-            userdata.Password = await bcrypt.hash(userdata.Password, 10);
-            db.get().collection(collection.USER_COLLECTION).insertOne(userdata).then((data) => {
-                userdata._id = data.insertedId
-                //console.log(userdata);
-                resolve(userdata)
-            });
-        });
+            userdata.logingStatus = true;
+            let signedUser = await db.get().collection(collection.USER_COLLECTION).findOne({ Phone: userdata.Phone, Email: userdata.Email })
+            if (!signedUser) {
+                userdata.Password = await bcrypt.hash(userdata.Password, 10);
+                db.get().collection(collection.USER_COLLECTION).insertOne(userdata).then((data) => {
+                    userdata._id = data.insertedId
+                    //console.log(userdata);
+                    resolve(userdata)
+                });
+            } else {
+                reject('Account already exists')
+            }
+        })
     },
     doLogin: (userdata) => {
         return new Promise(async (resolve, reject) => {
@@ -24,17 +30,21 @@ module.exports = {
             let user = await db.get().collection(collection.USER_COLLECTION).findOne({ displayName: userdata.displayName })
             console.log(user);
             if (user) {
-                bcrypt.compare(userdata.password, user.Password).then((status) => {
-                    if (status) {
-                        console.log("Login sucess");
-                        response.user = user;
-                        response.status = true;
-                        resolve(response);
-                    } else {
-                        console.log("login Failed");
-                        resolve({ status: false });
-                    }
-                });
+                if (user.logingStatus) {
+                    bcrypt.compare(userdata.password, user.Password).then((status) => {
+                        if (status) {
+                            console.log("Login sucess");
+                            response.user = user;
+                            response.status = true;
+                            resolve(response);
+                        } else {
+                            console.log("login Failed");
+                            resolve({ status: false });
+                        }
+                    });
+                } else {
+                    reject('Sorry your Blocked!');
+                }
             } else {
                 console.log('login failed');
                 resolve({ status: false })
@@ -48,10 +58,14 @@ module.exports = {
             let response = {}
             let user = await db.get().collection(collection.USER_COLLECTION).findOne({ Phone: userdata })
             if (user) {
-                console.log("Login sucess");
-                response.user = user;
-                response.status = true;
-                resolve(response);
+                if (user.logingStatus) {
+                    console.log("Login sucess");
+                    response.user = user;
+                    response.status = true;
+                    resolve(response);
+                } else {
+                    reject('Sorry your Blocked!');
+                }
             } else {
                 console.log('login failed');
                 resolve({ status: false })
@@ -59,22 +73,27 @@ module.exports = {
         });
     },
     googleAccount: (data) => {
+        data.logingStatus = true;
         return new Promise(async (resolve, reject) => {
             //console.log("google userhelp",data);
             let loginStatus = false;
             let response = {}
             let user = await db.get().collection(collection.USER_COLLECTION).findOne({ Email: data.Email })
             if (user) {
-                response.user = user;
-                response.status = true;
-                console.log("g-login", response);
-                resolve(response);
+                if (user.logingStatus) {
+                    response.user = user;
+                    response.status = true;
+                    console.log("g-Login sucess");
+                    resolve(response);
+                } else {
+                    reject('Sorry your Blocked!');
+                }
             } else {
                 await db.get().collection(collection.USER_COLLECTION).insertOne(data).then((data1) => {
                     data._id = data1.insertedId
                     response.user = data;
                     response.status = true;
-                    console.log("g-acc crear", response);
+                    console.log("g-account created");
                     resolve(response)
                 });
 
@@ -95,10 +114,10 @@ module.exports = {
             }
         });
     },
-    getBanner : () => {
-        return new Promise(async(resolve,reject) => {
-           let banner = await db.get().collection(collection.BANNER_COLLECTION).find().toArray()
-           resolve(banner)
+    getBanner: () => {
+        return new Promise(async (resolve, reject) => {
+            let banner = await db.get().collection(collection.BANNER_COLLECTION).find().toArray()
+            resolve(banner)
         })
     },
     addTowishlist: (prodId, userId) => {
@@ -176,8 +195,8 @@ module.exports = {
             resolve("not found")
         })
     },
-    removeWishlistitem:(wishDetails) =>{
-        return new Promise(async(resolve, reject) => {
+    removeWishlistitem: (wishDetails) => {
+        return new Promise(async (resolve, reject) => {
 
             db.get().collection(collection.WISHLIST_COLLECTION)
                 .deleteOne({ _id: objectId(wishDetails.cart) }
@@ -311,7 +330,7 @@ module.exports = {
                 })
         })
     },
-    
+
     getTotalAmount: (userId) => {
         //getting all product details
         return new Promise(async (resolve, reject) => {
@@ -361,31 +380,31 @@ module.exports = {
 
         })
     },
-    userAddress : (checkoutDetails) =>{
-        return new Promise(async(resolve,reject) => {
+    userAddress: (checkoutDetails) => {
+        return new Promise(async (resolve, reject) => {
             let address = {
-                userId : objectId(checkoutDetails.userId),
-                name : checkoutDetails.name,
-                addNumber : checkoutDetails.number,
-                addEmail : checkoutDetails.email,
-                address : checkoutDetails.address,
-                country : checkoutDetails.country,
+                userId: objectId(checkoutDetails.userId),
+                name: checkoutDetails.name,
+                addNumber: checkoutDetails.number,
+                addEmail: checkoutDetails.email,
+                address: checkoutDetails.address,
+                country: checkoutDetails.country,
                 city: checkoutDetails.city,
-                zip:checkoutDetails.zip
+                zip: checkoutDetails.zip
             }
-           let userAddress = await db.get().collection(collection.USER_ADDRESS).findOne({userId : objectId(checkoutDetails.userId)})
-           if(userAddress){
-               resolve()
-           }else {
-            db.get().collection(collection.USER_ADDRESS).insertOne(address).then(() => {
+            let userAddress = await db.get().collection(collection.USER_ADDRESS).findOne({ userId: objectId(checkoutDetails.userId) })
+            if (userAddress) {
                 resolve()
-            })
-           }
+            } else {
+                db.get().collection(collection.USER_ADDRESS).insertOne(address).then(() => {
+                    resolve()
+                })
+            }
         })
     },
-    getUserAddress : (userId) => {
-        return new Promise(async(resolve,reject) => {
-            db.get().collection(collection.USER_ADDRESS).findOne({userId : objectId(userId)}).then((address) => {
+    getUserAddress: (userId) => {
+        return new Promise(async (resolve, reject) => {
+            db.get().collection(collection.USER_ADDRESS).findOne({ userId: objectId(userId) }).then((address) => {
                 resolve(address)
             }).catch(() => {
                 resolve()
@@ -422,12 +441,12 @@ module.exports = {
                     }
                 }
             ]).toArray()
-            console.log("as",orderItems);
+            console.log("as", orderItems);
             resolve(orderItems)
         })
     },
     placeOrder: (order, products, total, couponDetails) => {
-        console.log("coupon",couponDetails);
+        console.log("coupon", couponDetails);
         return new Promise((resolve, reject) => {
             // console.log("order",order,products,total);
             let dateObj = new Date();
@@ -452,7 +471,7 @@ module.exports = {
                 products: products,
                 totalAmount: total,
                 date: currentDate,
-                couponId :  objectId(couponDetails?._id),
+                couponId: objectId(couponDetails?._id),
                 status: status
             }
             db.get().collection(collection.ORDER_COLLECTION).insertOne(orderObj).then((response) => {
@@ -460,14 +479,14 @@ module.exports = {
                 if (response.status === "placed") {
                     db.get().collection(collection.CART_COLLECTION).deleteOne({ user: objectId(order.userId) })
                 }
-                if(couponDetails){
-                console.log("coupon",couponDetails);
-                db.get().collection(collection.COUPON_COLLECTION)
-                .updateOne({ _id: objectId(couponDetails._id) },
-                    {
-                        $push: { usedUserDetails: objectId(order.userId) }
-    
-                    })
+                if (couponDetails) {
+                    console.log("coupon", couponDetails);
+                    db.get().collection(collection.COUPON_COLLECTION)
+                        .updateOne({ _id: objectId(couponDetails._id) },
+                            {
+                                $push: { usedUserDetails: objectId(order.userId) }
+
+                            })
                 }
                 resolve(response.insertedId)
             })
@@ -479,5 +498,5 @@ module.exports = {
             resolve(cart.products)
         })
     },
-    
+
 }

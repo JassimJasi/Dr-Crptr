@@ -253,4 +253,54 @@ $('#couponForm').submit((e) => {
     }
   })
 })
-
+function cancelOrder(orderId) {
+  $.ajax({
+    url: '/cancelOrder/' + orderId,
+    method: 'get',
+    success: (response) => {
+      if (response.status) {
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Cancelled',
+          showConfirmButton: false,
+          timer: 2000
+        })
+        location.reload()
+      }
+    },
+    error: (response) => {
+      alert(response)
+    }
+  })
+}
+//edit user
+$('#editUserAccount').submit((e) => {
+  e.preventDefault();
+  $.ajax({
+    url: '/editUserAccount',
+    method:'post',
+    data:$('#editUserAccount').serialize(),
+    success:(resource) => {
+      if(resource.ediStatus) {
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Account successfully edited',
+          showConfirmButton: false,
+          timer: 2000
+        })
+        // document.getElementById('discount').innerHTML = resource.discountPrice
+        // document.getElementById('total').innerHTML = resource.discountTotal
+      }else{
+        Swal.fire({
+          position: 'center',
+          icon: 'Failed',
+          title: 'Failed!!',
+          showConfirmButton: false,
+          timer: 2000
+        })
+      }
+    }
+  })
+})

@@ -8,7 +8,9 @@ const passport = require('passport');
 require('../helpers/googleAuth')(passport);
 const productHelpers = require('../helpers/productHelpers');
 const payHelper = require('../helpers/PayHelpers');
-const offerHelper = require('../helpers/offerHelpers')
+const offerHelper = require('../helpers/offerHelpers');
+const orderHelper = require('../helpers/orderHelper');
+const adminHelper = require('../helpers/adminHelper');
 
 // Not login
 const verifyLogin = (req, res, next) => {
@@ -81,7 +83,11 @@ router.post('/otp', (req, res) => {
           req.session.user = response;
           req.session.loggedIn = true
           res.redirect('/')
-        });
+        }).catch((err) => {
+          req.session.loginErr = err
+
+          res.redirect('/userLogin')
+        })
       }
     } else {
 
@@ -128,10 +134,13 @@ router.post('/userLogin', (req, res) => {
       }
     } else {
       req.session.loginErr = "Invalid Email or Password"
-
       res.redirect('/userLogin')
     }
-  });
+  }).catch((err) => {
+    req.session.loginErr = err
+
+    res.redirect('/userLogin')
+  })
 });
 //google
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email',] }))
@@ -140,7 +149,30 @@ router.get('/google/callback', passport.authenticate('google', { failureRedirect
   req.session.user = req.user.user
   req.session.loggedIn = true
   res.redirect('/')
-});
+})
+
+//Account
+router.get('/myAccount', verifyLogin, (req, res) => {
+  let user = req.session.user;
+  console.log(user);
+  res.render('user/userAccount', { user })
+})
+router.get('/accountEdit', verifyLogin, (req, res) => {
+  let user = req.session.user;
+  res.render('user/userEdit', { user })
+})
+router.post('/editUserAccount', (req, res) => {
+  console.log(req.body);
+  adminHelper.editUser(req.session.user._id, req.body).then((response) => {
+    res.json(response)
+  })
+})
+//user address
+router.get('/userAddress', verifyLogin, async (req, res) => {
+  let user = req.session.user
+  let address = await userHelper.getUserAddress(req.session.user._id)
+  res.render('user/userAddress', { user, address })
+})
 
 //product
 router.get('/userProduct', async (req, res) => {
@@ -269,14 +301,14 @@ router.post('/remove-Wishlist-product', (req, res) => {
 })
 //Coupon
 router.post('/apply-coupon', verifyLogin, (req, res) => {
-  console.log("userjs", req.body, "sxxsx", req.session.user._id);
+  //console.log("userjs", req.body, "sxxsx", req.session.user._id);
   offerHelper.applyCoupon(req.body, req.session.user._id).then((response) => {
     if (response.status) {
       req.session.coupon = response.coupon;
       req.session.discount = response.discountPrice
-      console.log("user",req.session.coupon);
+      // console.log("user",req.session.coupon);
     }
-    console.log('user coup', response);
+    // console.log('user coup', response);
     res.json(response)
   })
 })
@@ -301,7 +333,7 @@ router.post('/place-order', verifyLogin, async (req, res) => {
     totalPrice = await userHelper.getTotalAmount(req.body.userId);
   }
   userHelper.userAddress(req.body).then(() => {
-    console.log(req.session.coupon);
+    //console.log(req.session.coupon);
     userHelper.placeOrder(req.body, products, totalPrice, req.session.coupon).then((orderId) => {
       // console.log("place req body",req.body['payment-method']);
       if (req.body['payment-method'] === 'COD') {
@@ -319,7 +351,7 @@ router.post('/place-order', verifyLogin, async (req, res) => {
   })
 })
 router.post('/verify-payment', verifyLogin, (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
 
   payHelper.verifyPayment(req.body).then(() => {
     payHelper.changePaymentStatus(req.body['order[receipt]'], req.session.user._id).then(() => {
@@ -335,7 +367,7 @@ router.post('/verify-payment', verifyLogin, (req, res) => {
 //order
 router.get('/order', verifyLogin, async (req, res) => {
   let orders = await payHelper.getOrderDetails(req.session.user._id)
- // console.log('order', orders);
+  // console.log('order', orders);
   res.render('user/order', { orders })
 
 })
@@ -343,6 +375,11 @@ router.get('/view-order-products/:id', verifyLogin, async (req, res) => {
   let products = await userHelper.getOrderProducts(req.params.id)
   //console.log("view-ord", products);
   res.render('user/viewOrderProducts', { products })
+})
+router.get('/cancelOrder/:id', (req, res) => {
+  orderHelper.cancelOrder(req.params.id).then((response) => {
+    res.json(response)
+  })
 })
 
 

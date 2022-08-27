@@ -15,6 +15,7 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="/">Home</a>
                             </li>
+                            {{#if user}}
                             <li class="nav-item">
                                 <a class="nav-link" href="/userProduct" type="button" role="button"
                                     >
@@ -28,6 +29,7 @@
                                     Orders
                                 </a>
                             </li>
+                            {{/if}}
                             {{!-- <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="blog.html" id="navbarDropdown_3" role="button"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -73,7 +75,7 @@
                                         <a href="#" class="text-white">{{this.user.displayName}}</a><br>
                                     {{/with}}    --}}
                                         {{!-- {{/if}} --}}
-                                        <a href="#" class="text-white">My Orders</a><br>
+                                        <a href="/myAccount" class="text-white">My Account</a><br>
                                         <a href="/userLogout" class="text-white">Logout</a>
                                     </div>
                                     {{else}}
