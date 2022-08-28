@@ -24,6 +24,7 @@ const verifyLogin = (req, res, next) => {
 /* GET home page. */
 router.get('/', async function (req, res, next) {
   let user = req.session.user;
+  let category = await productHelpers.viewCategory();
   //console.log("final", user);
   res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
   let banner = await userHelper.getBanner()
@@ -37,7 +38,7 @@ router.get('/', async function (req, res, next) {
   // console.log(fourProducts);
   productHelpers.viewProducts().then((products) => {
     //console.log("prod", products);
-    res.render('user/userHome', { admin: false, user, products, cartCount, fourProducts, banner });
+    res.render('user/userHome', { admin: false, user, products, cartCount, fourProducts, banner,category });
   })
 
 });
@@ -178,7 +179,6 @@ router.get('/userAddress', verifyLogin, async (req, res) => {
 router.get('/userProduct', async (req, res) => {
   let user = req.session.user;
   let category = await productHelpers.viewCategory()
-
   //console.log("userCate",category);
   productHelpers.viewProducts().then((products) => {
     let sortProduct = products.sort(function (a, b) { return a.product.price - b.product.price })
@@ -206,16 +206,15 @@ router.get('/userProduct/:cate', async (req, res) => {
 })
 
 //product Details
-router.get('/prodDetails/:id', (req, res, next) => {
-
+router.get('/prodDetails/:id',verifyLogin,async (req, res, next) => {
   let user = req.session.user;
-
+  let category = await productHelpers.viewCategory()
   productHelpers.productDetails(req.params.id).then((productDetails) => {
     // console.log("user 1 pro", productDetails);
     let category = productDetails.product.product_categorie
     productHelpers.cateProducts(category).then((products) => {
       //console.log("cate prod", products)
-      res.render('user/productDetails', { user, productDetails, products })
+      res.render('user/productDetails', { user, productDetails, products,category })
     })
   }).catch((errMes) => {
     next(errMes)
